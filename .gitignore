@@ -1,0 +1,47 @@
+# Godot-specific ignores
+.import/
+export.cfg
+export_presets.cfg
+.mono/
+data_*/
+mono_crash.*.json
+
+# Godot 4+ specific
+.godot/
+
+# General development files
+*.tmp
+*.log
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Build artifacts
+build/
+dist/
+*.exe
+*.dmg
+*.app
+*.apk
+*.aab
+
+# Temporary files
+temp/
+tmp/
+
+.vscode/
