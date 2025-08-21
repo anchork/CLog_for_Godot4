@@ -26,7 +26,7 @@ static func stack(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null,
 	for i in range(2, currentStack.size()):
 		var info = currentStack[i];
 		buf += "".join([
-			"⛏️ [.",
+			"⛏️ [./",
 			info["source"].trim_prefix("res://"),
 			":",
 			info["line"],
@@ -41,10 +41,27 @@ static func e(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=
 	outputWithBg("pink", "black", _join([v1,v2,v3,v4,v5,v6,v7,v8]), "❌")
 
 static func err(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("red", "\n" + "❗❗❗❗ ERROR ❗❗❗❗" + "\n" + _join([v1,v2,v3,v4,v5,v6,v7,v8]) + "\n======================", "❌")
+	var currentStack = get_stack();
+	var buf = "[color=white][bgcolor=brown][b]" + _join([v1,v2,v3,v4,v5,v6,v7,v8]) + "[/b][/bgcolor][/color]\n";
+	for i in range(2, currentStack.size()):
+		var info = currentStack[i];
+		buf += "".join([
+			"⛏️ [./",
+			info["source"].trim_prefix("res://"),
+			":",
+			info["line"],
+			" ",
+			info["function"],
+			"()]\n"
+		]);
+	buf = buf.trim_suffix("\n");
+	output("red", "" + buf, "🖥️");
 
 static func warn(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	output("yellow", "\n" + "⚠️⚠️⚠️⚠️⚠️⚠️ WARNING ⚠️⚠️⚠️⚠️⚠️⚠️" + "\n" + _join([v1,v2,v3,v4,v5,v6,v7,v8]) + "\n======================", "💊")
+
+static func w(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
+	outputWithBg("yellow", "black", _join([v1,v2,v3,v4,v5,v6,v7,v8]), "⚠️")
 
 static func strong(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	output("orange", "\n" + "🎆🎆🎆🎆🎆🎆🎆🎆🎆🎆" + "\n" + _join([v1,v2,v3,v4,v5,v6,v7,v8]) + "\n======================", "🎈")
@@ -92,9 +109,9 @@ static func timerCancel(name:String):
 static func red(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	output("red", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["red"]["emoji"])
 static func blue(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("blue", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["blue"]["emoji"])
+	output("light_blue", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["blue"]["emoji"])
 static func green(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("green", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["green"]["emoji"])
+	output("light_green", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["green"]["emoji"])
 static func pink(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	output("pink", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["pink"]["emoji"])
 static func cyan(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
@@ -113,9 +130,9 @@ static func brown(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null,
 static func tempRed(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	output("red", _join([v1,v2,v3,v4,v5,v6,v7,v8]), TEMP_EMOJI)
 static func tempBlue(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("blue", _join([v1,v2,v3,v4,v5,v6,v7,v8]), TEMP_EMOJI)
+	output("light_blue", _join([v1,v2,v3,v4,v5,v6,v7,v8]), TEMP_EMOJI)
 static func tempGreen(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("green", _join([v1,v2,v3,v4,v5,v6,v7,v8]), TEMP_EMOJI)
+	output("light_green", _join([v1,v2,v3,v4,v5,v6,v7,v8]), TEMP_EMOJI)
 static func tempPink(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	output("pink", _join([v1,v2,v3,v4,v5,v6,v7,v8]), TEMP_EMOJI)
 static func tempCyan(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
@@ -134,9 +151,9 @@ static func tempBrown(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=n
 static func redBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	outputWithBg("red", COLORS["red"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["red"]["emoji"])
 static func blueBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("blue", COLORS["blue"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["blue"]["emoji"])
+	outputWithBg("light_blue", COLORS["blue"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["blue"]["emoji"])
 static func greenBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("green", COLORS["green"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["green"]["emoji"])
+	outputWithBg("light_green", COLORS["green"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["green"]["emoji"])
 static func pinkBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	outputWithBg("pink", COLORS["pink"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["pink"]["emoji"])
 static func cyanBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
