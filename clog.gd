@@ -73,36 +73,44 @@ static func temp(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, 
 	output("orange", _join([v1,v2,v3,v4,v5,v6,v7,v8]), "🚮");
 
 static var _timers:Dictionary = {}
+static var _timer_id:int = 0;
 
-static func timerStart(name:String):
-	_timers[name] = Time.get_ticks_msec()
-	var color = getPair(name)
-	outputWithBg(toHex(color["light"]), toHex(color["dark"]), _join(["Timer Started: ", name]), "🕒")
+static func timerStart(name:String) -> int:
+	_timer_id += 1;
+	_timers[_timer_id] = {
+		"name": name,
+		"start_time": Time.get_ticks_msec()
+	}
+	var color = getPair(str(_timer_id))
+	outputWithBg(toHex(color["light"]), toHex(color["dark"]), _join([str(_timer_id) + ":", "Timer Started: ", name]), "🕒")
+	return _timer_id;
 
-static func timerEnd(name:String, warningTime:int = 1000):
-	if _timers.has(name):
-		var start_time = _timers[name]
+static func timerEnd(id:int, warningTime:int = 1000):
+	if _timers.has(id):
+		var start_time = _timers[id]["start_time"]
 		var end_time = Time.get_ticks_msec()
 		var elapsed = end_time - start_time
 		var message = "";
 		if elapsed > warningTime:
-			message = "Timer Ended: [%s]: [color=black][bgcolor=red][b]%d ms[/b][/bgcolor][/color]" % [name, elapsed];
+			message =  "Timer Ended: [%s]: [color=black][bgcolor=red][b]%d ms[/b][/bgcolor][/color]" % [_timers[id]["name"], elapsed];
 		else:
-			message = "Timer Ended: [%s]: %d ms" % [name, elapsed];
+			message = "Timer Ended: [%s]: %d ms" % [_timers[id]["name"], elapsed];
 
-		var color = getPair(name)
-		outputWithBg(toHex(color["light"]), toHex(color["dark"]), _join([message]), "🕒")
-		_timers.erase(name)
+		var color = getPair(str(id))
+		outputWithBg(toHex(color["light"]), toHex(color["dark"]), _join([str(id) + ":", message]), "🕒")
+		_timers.erase(id)
 	else:
-		print("Timer [%s]: Not started" % name)
+		outputWithBg("red", "white", str(id) + ": Timer [%s]: Not started" % str(id), "🕒")
 
-static func timerCancel(name:String):
-	if _timers.has(name):
-		_timers.erase(name)
-		var color = getPair(name)
-		outputWithBg(toHex(color["light"]), toHex(color["dark"]), _join(["timer canceled: ", name]), "❌")
+
+static func timerCancel(id:int):
+	if _timers.has(id):
+		var timerName = _timers[id]["name"]
+		_timers.erase(id)
+		var color = getPair(str(id))
+		outputWithBg(toHex(color["light"]), toHex(color["dark"]), _join(["timer canceled: ", timerName]), "❌")
 	else:
-		print("Timer [%s]: Not found" % name)
+		outputWithBg("red", "white", _join(["timer canceled: ", str(id)]), "❌")
 
 
 # Convenient shorthand methods for backward compatibility
@@ -151,7 +159,7 @@ static func tempBrown(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=n
 static func redBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	outputWithBg("red", COLORS["red"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["red"]["emoji"])
 static func blueBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("light_blue", COLORS["blue"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["blue"]["emoji"])
+	outputWithBg("blue", COLORS["blue"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["blue"]["emoji"])
 static func greenBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	outputWithBg("light_green", COLORS["green"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["green"]["emoji"])
 static func pinkBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
