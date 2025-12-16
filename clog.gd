@@ -25,6 +25,8 @@ static func stack(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null,
 
 static func e(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	outputWithBg("pink", "black", _join([v1,v2,v3,v4,v5,v6,v7,v8]), "❌")
+	if OS.is_debug_build():
+		assert(false, "")
 
 static func err(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	var currentStack = get_stack();
@@ -42,6 +44,8 @@ static func err(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v
 		]);
 	buf = buf.trim_suffix("\n");
 	output("red", "" + buf, "🖥️");
+	if OS.is_debug_build():
+		assert(false, "")
 
 static func warn(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	output("yellow", "\n" + "⚠️⚠️⚠️⚠️⚠️⚠️ WARNING ⚠️⚠️⚠️⚠️⚠️⚠️" + "\n" + _join([v1,v2,v3,v4,v5,v6,v7,v8]) + "\n======================", "💊")
