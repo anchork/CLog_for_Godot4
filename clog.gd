@@ -69,7 +69,7 @@ static func timerStart(name:String) -> int:
 	_timer_id += 1;
 	_timers[_timer_id] = {
 		"name": name,
-		"start_time": Time.get_ticks_msec()
+		"start_time": Time.get_ticks_usec()
 	}
 	var color = getPair(str(_timer_id))
 	outputWithBg(toHex(color["light"]), toHex(color["dark"]), _join([str(_timer_id) + ":", "Timer Started: ", name]), "🕒")
@@ -78,13 +78,13 @@ static func timerStart(name:String) -> int:
 static func timerEnd(id:int, warningTime:int = 1000):
 	if _timers.has(id):
 		var start_time = _timers[id]["start_time"]
-		var end_time = Time.get_ticks_msec()
-		var elapsed = end_time - start_time
+		var end_time = Time.get_ticks_usec()
+		var elapsed = float(end_time - start_time) / 1000.0
 		var message = "";
 		if elapsed > warningTime:
-			message =  "Timer Ended: [%s]: [color=black][bgcolor=red][b]%d ms[/b][/bgcolor][/color]" % [_timers[id]["name"], elapsed];
+			message =  "Timer Ended: [%s]: [color=black][bgcolor=red][b]%.3f ms[/b][/bgcolor][/color]" % [_timers[id]["name"], elapsed];
 		else:
-			message = "Timer Ended: [%s]: %d ms" % [_timers[id]["name"], elapsed];
+			message = "Timer Ended: [%s]: %.3f ms" % [_timers[id]["name"], elapsed];
 
 		var color = getPair(str(id))
 		outputWithBg(toHex(color["light"]), toHex(color["dark"]), _join([str(id) + ":", message]), "🕒")
