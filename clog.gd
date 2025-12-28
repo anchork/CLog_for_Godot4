@@ -2,22 +2,8 @@ class_name CLog
 
 enum LogType { NORMAL, TEMP, BACKGROUND }
 
-# Color configurations with emojis
-static var COLORS = {
-	"red": { "emoji": "🐹", "bg_text": "white" },
-	"blue": { "emoji": "🐹", "bg_text": "white" },
-	"green": { "emoji": "🐹", "bg_text": "black" },
-	"pink": { "emoji": "🐹", "bg_text": "black" },
-	"cyan": { "emoji": "🐹", "bg_text": "black" },
-	"magenta": { "emoji": "🐹", "bg_text": "white" },
-	"yellow": { "emoji": "🐹", "bg_text": "black" },
-	"gray": { "emoji": "🐹", "bg_text": "black" },
-	"orange": { "emoji": "🐹", "bg_text": "black" },
-	"brown": { "emoji": "🐹", "bg_text": "white" },
-	"white": { "emoji": "🐹", "bg_text": "black" }
-}
-
-static var TEMP_EMOJI = "🚮"
+const MOUSE_EMOJI = "🐹"
+const TEMP_EMOJI = "🚮"
 
 # Core logging methods
 static func stack(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
@@ -39,6 +25,8 @@ static func stack(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null,
 
 static func e(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	outputWithBg("pink", "black", _join([v1,v2,v3,v4,v5,v6,v7,v8]), "❌")
+	if OS.is_debug_build():
+		assert(false, "")
 
 static func err(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	var currentStack = get_stack();
@@ -56,6 +44,8 @@ static func err(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v
 		]);
 	buf = buf.trim_suffix("\n");
 	output("red", "" + buf, "🖥️");
+	if OS.is_debug_build():
+		assert(false, "")
 
 static func warn(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	output("yellow", "\n" + "⚠️⚠️⚠️⚠️⚠️⚠️ WARNING ⚠️⚠️⚠️⚠️⚠️⚠️" + "\n" + _join([v1,v2,v3,v4,v5,v6,v7,v8]) + "\n======================", "💊")
@@ -115,25 +105,34 @@ static func timerCancel(id:int):
 
 # Convenient shorthand methods for backward compatibility
 static func red(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("red", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["red"]["emoji"])
+	output("red", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
+
 static func blue(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("light_blue", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["blue"]["emoji"])
+	output("light_blue", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
+
 static func green(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("light_green", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["green"]["emoji"])
+	output("light_green", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
+
 static func pink(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("pink", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["pink"]["emoji"])
+	output("pink", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
+
 static func cyan(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("cyan", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["cyan"]["emoji"])
+	output("cyan", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
+
 static func magenta(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("magenta", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["magenta"]["emoji"])
+	output("magenta", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
+
 static func yellow(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("yellow", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["yellow"]["emoji"])
+	output("yellow", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
+
 static func gray(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("gray", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["gray"]["emoji"])
+	output("gray", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
+
 static func orange(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("orange", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["orange"]["emoji"])
+	output("orange", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
+
 static func brown(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	output("brown", _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["brown"]["emoji"])
+	output("brown", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
 
 static func tempRed(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
 	output("red", _join([v1,v2,v3,v4,v5,v6,v7,v8]), TEMP_EMOJI)
@@ -157,34 +156,41 @@ static func tempBrown(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=n
 	output("brown", _join([v1,v2,v3,v4,v5,v6,v7,v8]), TEMP_EMOJI)
 
 static func redBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("red", COLORS["red"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["red"]["emoji"])
+	outputWithBg("red", "white", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
 static func blueBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("blue", COLORS["blue"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["blue"]["emoji"])
+	outputWithBg("blue", "white", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
 static func greenBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("light_green", COLORS["green"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["green"]["emoji"])
+	outputWithBg("light_green", "black", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
 static func pinkBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("pink", COLORS["pink"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["pink"]["emoji"])
+	outputWithBg("pink", "black", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
 static func cyanBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("cyan", COLORS["cyan"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["cyan"]["emoji"])
+	outputWithBg("cyan", "black", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
 static func magentaBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("magenta", COLORS["magenta"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["magenta"]["emoji"])
+	outputWithBg("magenta", "white", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
 static func yellowBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("yellow", COLORS["yellow"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["yellow"]["emoji"])
+	outputWithBg("yellow", "black", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
 static func grayBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("gray", COLORS["gray"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["gray"]["emoji"])
+	outputWithBg("gray", "black", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
 static func orangeBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("orange", COLORS["orange"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["orange"]["emoji"])
+	outputWithBg("orange", "black", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
 static func brownBg(v1=null, v2=null, v3=null, v4=null, v5=null, v6=null, v7=null, v8=null):
-	outputWithBg("brown", COLORS["brown"]["bg_text"], _join([v1,v2,v3,v4,v5,v6,v7,v8]), COLORS["brown"]["emoji"])
+	outputWithBg("brown", "white", _join([v1,v2,v3,v4,v5,v6,v7,v8]), MOUSE_EMOJI)
 
+static func outputNoInfo(color:String, message:String, prefix:String = ""):
+	if OS.is_debug_build():
+		print_rich(prefix + " [color=" + color + "]" + message + "[/color]");
+
+static func outputNoInfoBg(bgColor:String, color:String, message:String, prefix:String=""):
+	if OS.is_debug_build():
+		print_rich(prefix + " [bgcolor=" + bgColor + "][color=" + color + "][b]" + message + "[/b][/color][/bgcolor]");
 
 static func output(color:String, message:String, emoji:String):
 	if OS.is_debug_build():
 		print_rich(emoji + _getCaller() + " [color=" + color + "]" + message + "[/color]");
 
-static func outputWithBg(color:String, cColor:String, message:String, emoji:String):
+static func outputWithBg(bgColor:String, color:String, message:String, emoji:String):
 	if OS.is_debug_build():
-		print_rich(emoji + _getCaller() + " [bgcolor=" + color + "][color=" + cColor + "][b]" + message + "[/b][/color][/bgcolor]");
+		print_rich(emoji + _getCaller() + " [bgcolor=" + bgColor + "][color=" + color + "][b]" + message + "[/b][/color][/bgcolor]");
 
 static func _join(arr):
 	var r: Array[String] = [];
