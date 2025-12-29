@@ -81,8 +81,8 @@ static func timerStart(name:String) -> int:
 		"name": name,
 		"start_time": Time.get_ticks_usec()
 	}
-	var color = getPair(str(_timer_id))
-	outputWithBg(toHex(color["light"]), toHex(color["dark"]), _join([str(_timer_id) + ":", "Timer Started: ", name]), "🕒")
+	# var color = getPair(str(_timer_id))
+	# outputWithBg(toHex(color["light"]), toHex(color["dark"]), _join([str(_timer_id) + ":", "Timer Started: ", name]), "🕒")
 	return _timer_id;
 
 static func timerEnd(id:int, warningTime:int = 1000):
