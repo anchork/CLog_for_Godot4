@@ -189,6 +189,9 @@ static func _flush(message:String):
 
 
 static func _get_source_link(stacktrace_line: Dictionary) -> String:
+	if stacktrace_line.size() == 0:
+		return "UNKNOWN CALLER"
+
 	# { "source": "res://scenes/view/view.gd", "function": "enter", "line": 38 }
 	var full_path = ProjectSettings.globalize_path(stacktrace_line["source"])
 	var project_path = ProjectSettings.globalize_path("res://")
