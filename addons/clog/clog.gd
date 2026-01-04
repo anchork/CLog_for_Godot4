@@ -234,7 +234,7 @@ static func _join(arr: Array):
 
 static func _get_caller(backward_index: int) -> Dictionary:
 	var current_stack = get_stack()
-	if current_stack.size() < backward_index:
+	if current_stack.size() <= backward_index:
 		return { }
 
 	return current_stack[backward_index]
