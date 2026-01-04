@@ -3,7 +3,6 @@ class_name CLog
 const TIMER_BG_LIGHTNESS = 0.5
 const TIMER_BG_ALPHA = 0.4
 
-
 static var disable_output_on_release_mode = true
 static var _timers: Dictionary = { }
 static var _timer_id: int = 0
@@ -12,6 +11,7 @@ static var _last_output: String = ""
 static var _same_output_count: int = 0
 static var _flush_scheduled: bool = false
 static var _once_keys: Dictionary[StringName, int] = { }
+
 
 static func e(...args):
 	var message = _join(args)
@@ -120,7 +120,8 @@ static func o(...args):
 static func c(color: Color, ...args):
 	_output(color, _join(args))
 
-static func once(key:String, ...args):
+
+static func once(key: String, ...args):
 	_output(CLogColors.TEXT_COLOR, _join(args), key)
 
 
@@ -162,7 +163,8 @@ static func _output(color: Color, message: String, key: String = ""):
 	if !key.is_empty():
 		_once_keys[key] = 0
 
-static func _schedule_flush(message:String):
+
+static func _schedule_flush(message: String):
 	if _flush_scheduled:
 		return
 	_flush_scheduled = true
@@ -174,17 +176,18 @@ static func _schedule_flush(message:String):
 	_flush(message)
 
 
-static func _flush(message:String):
+static func _flush(message: String):
 	if _same_output_count > 1:
-		print_rich("""
+		print_rich(
+			"""
 			[color=gray]
 				(repeated {same_output_count} times) {message}
 			[/color]""".strip_escapes().format(
 				{
 					"same_output_count": _same_output_count,
 					"message": message,
-				}
-			)
+				},
+			),
 		)
 
 	_same_output_count = 1
