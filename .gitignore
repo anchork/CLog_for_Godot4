@@ -1,0 +1,20 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Ignore all addons except clog
+addons/*
+!addons/clog/
+!addons/clog/**
+
+.vscode/
+*.uid
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# General
+*.log
+*.tmp
