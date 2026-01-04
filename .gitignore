@@ -18,3 +18,7 @@ desktop.ini
 # General
 *.log
 *.tmp
+
+
+*~lock~
+
