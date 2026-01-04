@@ -167,6 +167,10 @@ static func _schedule_flush(message:String):
 		return
 	_flush_scheduled = true
 
+	var main_loop = Engine.get_main_loop()
+	if main_loop:
+		await main_loop.process_frame
+
 	_flush(message)
 
 
