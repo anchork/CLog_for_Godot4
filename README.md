@@ -46,7 +46,7 @@ Both `CLog.e` and `CLog.w` internally call `push_error()` and `push_warning()` r
 ### Custom Color Output
 Logs a message using a specific color.
 ```gdscript
-CLog.c(Color(1, 0.5, 0), "Custom orange message")
+CLog.c(Color.ORANGE, "Custom orange message")
 ```
 
 ### Once (Log once by key)
