@@ -152,9 +152,9 @@ static func _output(color: Color, message: String, key: String = ""):
 
 	if _last_output == formatted_message:
 		_same_output_count += 1
-		_schedule_flush()
+		_schedule_flush(message)
 	else:
-		_flush()
+		_flush(message)
 		print_rich(formatted_message)
 		_last_output = formatted_message
 		_same_output_count = 1
@@ -162,18 +162,26 @@ static func _output(color: Color, message: String, key: String = ""):
 	if !key.is_empty():
 		_once_keys[key] = 0
 
-static func _schedule_flush():
+static func _schedule_flush(message:String):
 	if _flush_scheduled:
 		return
 	_flush_scheduled = true
 
-	await Engine.get_main_loop().process_frame
-	_flush()
+	_flush(message)
 
 
-static func _flush():
+static func _flush(message:String):
 	if _same_output_count > 1:
-		print_rich("[color=gray](repeated %d times)[/color]" % _same_output_count)
+		print_rich("""
+			[color=gray]
+				(repeated {same_output_count} times) {message}
+			[/color]""".strip_escapes().format(
+				{
+					"same_output_count": _same_output_count,
+					"message": message,
+				}
+			)
+		)
 
 	_same_output_count = 1
 	_last_output = ""
