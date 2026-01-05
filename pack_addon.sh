@@ -10,4 +10,4 @@ VERSION=$1
 cp LICENSE ./addons/clog/
 cp README.md ./addons/clog/
 sed -i '' "s/version=\".*\"/version=\"$VERSION\"/" ./addons/clog/plugin.cfg
-zip -r clog-v$VERSION.zip ./addons/clog -x "*.uid"
+zip -r clog-v$VERSION.zip ./addons/clog -x "*.uid" "*.DS_Store"
