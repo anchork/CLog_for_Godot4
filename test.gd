@@ -38,7 +38,7 @@ func _test_timer():
 	var timer3_id = CLog.timer_start("timer3")
 	var timer4_id = CLog.timer_start("timer4")
 	var timer5_id = CLog.timer_start("timer5")
-	
+
 	CLog.timer_cancel(timer5_id)
 	CLog.timer_cancel(timer3_id)
 
