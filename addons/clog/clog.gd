@@ -1,7 +1,7 @@
 class_name CLog
 
-const TIMER_BG_LIGHTNESS = 0.5
-const TIMER_BG_ALPHA = 0.4
+const TIMER_BG_LIGHTNESS = 0.7
+const TIMER_BG_ALPHA = 0.25
 
 static var disable_output_on_release_mode = true
 static var _timers: Dictionary = { }
@@ -57,21 +57,26 @@ static func timer_start(timer_name: String) -> int:
 		return -1
 
 	_timer_id += 1
-	_timers[_timer_id] = {
-		"name": timer_name,
-		"start_time": Time.get_ticks_usec(),
-	}
-
-	var bg_color = _get_color(_timer_id, TIMER_BG_LIGHTNESS, TIMER_BG_ALPHA)
-	var content = """
-		[bgcolor={bgcolor}]
-			[b][TIMER_START][/b] {timer_name}
+	var indent_level = _timers.size()
+	var bg_color = _get_bg_color(_timer_id, TIMER_BG_LIGHTNESS, TIMER_BG_ALPHA)
+	var content: String = """
+		[color={indent_line_color}]{indent}[/color][bgcolor={bgcolor}]
+			{timer_name} [b]<TIMER_START>[/b]
 		[/bgcolor]""".strip_escapes().format(
 		{
+			"indent": "|\t".repeat(indent_level),
+			"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
 			"bgcolor": "#" + bg_color.to_html(Engine.is_embedded_in_editor()),
 			"timer_name": timer_name,
 		},
 	)
+
+	_timers[_timer_id] = {
+		"name": timer_name,
+		"start_time": Time.get_ticks_usec(),
+		"indent_level": indent_level,
+	}
+
 	_output(CLogColors.TEXT_COLOR, content)
 	return _timer_id
 
@@ -82,17 +87,21 @@ static func timer_end(id: int):
 		var end_time = float(Time.get_ticks_usec())
 		var elapsed = (end_time - start_time) / 1000.0
 		var timer_name = _timers[id]["name"]
+		var indent_level = _timers[id]["indent_level"]
 
-		var bg_color = _get_color(id, TIMER_BG_LIGHTNESS, TIMER_BG_ALPHA)
+		var bg_color = _get_bg_color(id, TIMER_BG_LIGHTNESS, TIMER_BG_ALPHA)
 		var content = """
-			[bgcolor={bgcolor}]
-				[b][TIMER_END][/b] {timer_name}: {elapsed}
+			[color={indent_line_color}]{indent}[/color][bgcolor={bgcolor}]
+				{timer_name} [b]<TIMER_END> [color={elapsed_color}]([i]{elapsed}[/i])[/color][/b]
 			[/bgcolor]
 		""".strip_escapes().format(
 			{
+				"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
+				"indent": "|\t".repeat(indent_level),
 				"bgcolor": "#" + bg_color.to_html(Engine.is_embedded_in_editor()),
-				"timer_name": " " + timer_name,
+				"timer_name": timer_name,
 				"elapsed": "%.3f" % elapsed + "ms",
+				"elapsed_color": "#" + CLogColors.WARNING_COLOR.to_html(Engine.is_embedded_in_editor()),
 			},
 		)
 		_output(CLogColors.TEXT_COLOR, content)
@@ -104,13 +113,16 @@ static func timer_end(id: int):
 static func timer_cancel(id: int):
 	if _timers.has(id):
 		var timer_name = _timers[id]["name"]
+		var indent_level = _timers[id]["indent_level"]
 		_timers.erase(id)
-		var bg_color = _get_color(id, TIMER_BG_LIGHTNESS, TIMER_BG_ALPHA)
+		var bg_color = _get_bg_color(id, TIMER_BG_LIGHTNESS, TIMER_BG_ALPHA)
 		var content = """
-			[bgcolor={bgcolor}]
-				[b][TIMER_CANCELED][/b] {timer_name}
+			[color={indent_line_color}]{indent}[bgcolor={bgcolor}]
+				{timer_name} [b]<TIMER_CANCELED>[/b]
 			[/bgcolor]""".strip_escapes().format(
 			{
+				"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
+				"indent": "─".repeat(indent_level),
 				"bgcolor": "#" + bg_color.to_html(Engine.is_embedded_in_editor()),
 				"timer_name": " " + timer_name,
 			},
