@@ -120,9 +120,6 @@ func _open_script_at_line(path: String, line: int):
 
 
 func _disable_plugin() -> void:
-	var base_control = EditorInterface.get_base_control()
-	var labels = base_control.find_children("*", "RichTextLabel", true, false)
-	for label in labels:
-		if label is RichTextLabel:
-			if label.meta_clicked.is_connected(_on_meta_clicked):
-				label.meta_clicked.disconnect(_on_meta_clicked)
+	for label in _connected_labels:
+		if label.meta_clicked.is_connected(_on_meta_clicked):
+			label.meta_clicked.disconnect(_on_meta_clicked)
