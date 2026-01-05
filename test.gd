@@ -38,6 +38,9 @@ func _test_timer():
 	var timer3_id = CLog.timer_start("timer3")
 	var timer4_id = CLog.timer_start("timer4")
 	var timer5_id = CLog.timer_start("timer5")
+	
+	CLog.timer_cancel(timer5_id)
+	CLog.timer_cancel(timer3_id)
 
 	await get_tree().create_timer(1).timeout
 
@@ -57,3 +60,4 @@ func _test_timer():
 	var timer9_id = CLog.timer_start("timer9")
 	await get_tree().create_timer(0.1).timeout
 	CLog.timer_end(timer9_id)
+	CLog.timer_cancel(timer9_id)
