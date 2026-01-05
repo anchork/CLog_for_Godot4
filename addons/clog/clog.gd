@@ -6,7 +6,15 @@ const TIMER_BG_ALPHA = 0.4
 static var disable_output_on_release_mode = true
 static var _timers: Dictionary = { }
 static var _timer_id: int = 0
-
+static var _timer_bg_colors: Array[Color] = [
+	Color.html("#e69f00"),
+	Color.html("#56b4e9"),
+	Color.html("#009e73"),
+	Color.html("#f0e442"),
+	Color.html("#0072b2"),
+	Color.html("#d55e00"),
+	Color.html("#cc79a7"),
+]
 static var _last_output: String = ""
 static var _once_keys: Dictionary[StringName, int] = { }
 static var _scheduled_messages: Dictionary[String, int] = { }
@@ -243,11 +251,7 @@ static func _get_caller(backward_index: int) -> Dictionary:
 	return current_stack[backward_index]
 
 
-static func _get_color(seed: int, lightness: float, alpha: float) -> Color:
-	var rng = RandomNumberGenerator.new()
-	rng.seed = seed
-
-	var h := rng.randf()
-	var color := Color.from_ok_hsl(h, 1.0, lightness)
-	color.a = alpha
+static func _get_bg_color(seed: int, lightness: float, alpha: float) -> Color:
+	var base_color: Color = _timer_bg_colors[seed % _timer_bg_colors.size()]
+	var color := Color.from_hsv(base_color.h, base_color.s, lightness, alpha)
 	return color
