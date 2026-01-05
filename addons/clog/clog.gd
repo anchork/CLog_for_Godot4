@@ -122,9 +122,9 @@ static func timer_cancel(id: int):
 			[/bgcolor]""".strip_escapes().format(
 			{
 				"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
-				"indent": "─".repeat(indent_level),
+				"indent": "|\t".repeat(indent_level),
 				"bgcolor": "#" + bg_color.to_html(Engine.is_embedded_in_editor()),
-				"timer_name": " " + timer_name,
+				"timer_name": timer_name,
 			},
 		)
 		_output(CLogColors.TEXT_COLOR, content)
