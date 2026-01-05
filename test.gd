@@ -15,6 +15,7 @@ func _test_output():
 	for i in range(100):
 		CLog.o("test")
 
+
 func _physics_process(_delta: float) -> void:
 	CLog.once(StringName(get_path()), "once")
 
@@ -33,12 +34,26 @@ func _test_warn():
 
 func _test_timer():
 	var timer1_id = CLog.timer_start("timer1")
-
-	await get_tree().create_timer(2).timeout
 	var timer2_id = CLog.timer_start("timer2")
+	var timer3_id = CLog.timer_start("timer3")
+	var timer4_id = CLog.timer_start("timer4")
+	var timer5_id = CLog.timer_start("timer5")
+
+	await get_tree().create_timer(1).timeout
+
+	CLog.timer_end(timer5_id)
+	CLog.timer_end(timer4_id)
+	var timer6_id = CLog.timer_start("timer6")
+	var timer7_id = CLog.timer_start("timer7")
+	CLog.timer_end(timer3_id)
+	var timer8_id = CLog.timer_start("timer8")
+	CLog.timer_end(timer2_id)
 	CLog.timer_end(timer1_id)
 
-	await get_tree().create_timer(1).timeout
-	CLog.timer_cancel(timer2_id)
-	await get_tree().create_timer(1).timeout
-	CLog.timer_end(timer2_id)
+	CLog.timer_end(timer8_id)
+	CLog.timer_end(timer7_id)
+	CLog.timer_end(timer6_id)
+
+	var timer9_id = CLog.timer_start("timer9")
+	await get_tree().create_timer(0.1).timeout
+	CLog.timer_end(timer9_id)
