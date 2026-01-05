@@ -8,9 +8,8 @@ static var _timers: Dictionary = { }
 static var _timer_id: int = 0
 
 static var _last_output: String = ""
-static var _same_output_count: int = 0
-static var _flush_scheduled: bool = false
 static var _once_keys: Dictionary[StringName, int] = { }
+static var _scheduled_messages: Dictionary[String, int] = { }
 
 
 static func e(...args):
@@ -152,22 +151,22 @@ static func _output(color: Color, message: String, key: String = ""):
 	)
 
 	if _last_output == formatted_message:
-		_same_output_count += 1
-		_schedule_flush(message)
+		_schedule_flush(formatted_message)
 	else:
-		_flush(message)
+		_flush(_last_output)
 		print_rich(formatted_message)
 		_last_output = formatted_message
-		_same_output_count = 1
 
 	if !key.is_empty():
 		_once_keys[key] = 0
 
 
 static func _schedule_flush(message: String):
-	if _flush_scheduled:
+	if _scheduled_messages.has(message):
+		_scheduled_messages[message] += 1
 		return
-	_flush_scheduled = true
+
+	_scheduled_messages[message] = 0
 
 	var main_loop = Engine.get_main_loop()
 	if main_loop:
@@ -177,22 +176,19 @@ static func _schedule_flush(message: String):
 
 
 static func _flush(message: String):
-	if _same_output_count > 1:
+	if _scheduled_messages.has(message):
+		var count = _scheduled_messages[message] + 1
 		print_rich(
-			"""
-			[color=gray]
-				(repeated {same_output_count} times) {message}
-			[/color]""".strip_escapes().format(
+			"[color={color}] └ (repeated {count}x)[/color]".format(
 				{
-					"same_output_count": _same_output_count,
-					"message": message,
+					"color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
+					"count": count,
 				},
-			),
+			)
 		)
 
-	_same_output_count = 1
+	_scheduled_messages.erase(message)
 	_last_output = ""
-	_flush_scheduled = false
 
 
 static func _get_source_link(stacktrace_line: Dictionary) -> String:
