@@ -228,7 +228,7 @@ static func _get_source_link(stacktrace_line: Dictionary) -> String:
 	return formatted
 
 
-static func _join(arr: Array):
+static func _join(arr: Array) -> String:
 	var r: Array[String] = []
 	for e in arr:
 		r.append(str(e))
