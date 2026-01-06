@@ -15,7 +15,7 @@ Supports Godot 4.5 or later.
 
 *Note: Source navigation is implemented using a workaround. If navigation stops working, please try restarting the plugin or the editor.*
 
-In IDEs such as VS Code or JetBrains, you can jump to the source code by using **Ctrl + Click** on the file path.
+In IDEs such as VS Code, you can jump to the source code by using **Ctrl + Click** on the file path.
 
 **VS Code Display Example:**
 ![VS Code Demo](media/vscode_demo.png)
