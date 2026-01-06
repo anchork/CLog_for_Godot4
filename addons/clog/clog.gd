@@ -167,14 +167,14 @@ static func _output(color: Color, message: String, key: String = ""):
 		if _once_keys.has(key):
 			return
 
-	var formatted_message = """
-			[color={line_color}]
-				[{source_link}]
-			[/color]
-			[color={color}]
-				{message}
-			[/color]
-		""".strip_escapes().format(
+	var formatted_message = "".join([
+		"[color={line_color}]",
+			"[{source_link}]",
+		"[/color]",
+		"[color={color}]",
+			"{message}",
+		"[/color]",
+	]).format(
 		{
 			"line_color": "#" + CLogColors.SOURCE_LINK_COLOR.to_html(Engine.is_embedded_in_editor()),
 			"source_link": source_link,
@@ -245,13 +245,13 @@ static func _get_source_link(stacktrace_line: Dictionary) -> String:
 	var short_link = link.split("/")[-1]
 	var formatted = link
 	if Engine.is_embedded_in_editor():
-		formatted = """
-			[hint='{link}']
-				[url={link}]
-					/{short_link}
-				[/url]
-			[/hint]
-		""".strip_escapes().format(
+		formatted = "".join([
+			"[hint='{link}']",
+				"[url={link}]",
+					"/{short_link}",
+				"[/url]",
+			"[/hint]",
+		]).format(
 			{
 				"link": link,
 				"short_link": short_link,
