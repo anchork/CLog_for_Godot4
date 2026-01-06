@@ -31,7 +31,7 @@ static func e(...args):
 				"\t",
 				" ".repeat(i - start),
 				"[color={comment_color}]L ",
-				_get_source_link(_get_caller(i)),
+					_get_source_link(_get_caller(i)),
 				"[/color]\n",
 			],
 		).format(
@@ -56,6 +56,20 @@ static func timer_start(timer_name: String) -> int:
 	_timer_id += 1
 	var indent_level = _timers.size()
 	var bg_color = _get_bg_color(_timer_id)
+	var content: String = "".join([
+		"[color={indent_line_color}]{indent}[/color]",
+		"[bgcolor={bgcolor}]  [/bgcolor] 🚀 ",
+		"[color={text_color}]",
+			"[ {timer_name} [b]<TIMER_START>[/b] ]",
+		"[/color]"
+	]).format({
+		"text_color": "#"
+				+ CLogColors.TEXT_COLOR.to_html(Engine.is_embedded_in_editor()),
+		"indent": "|   ".repeat(indent_level),
+		"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
+		"bgcolor": "#" + bg_color.to_html(Engine.is_embedded_in_editor()),
+		"timer_name": timer_name,
+	})
 
 	_timers[_timer_id] = {
 		"name": timer_name,
@@ -76,9 +90,23 @@ static func timer_end(id: int):
 		var indent_level = _timers[id]["indent_level"]
 
 		var bg_color = _get_bg_color(id)
+		var content = "".join([
+			"[color={indent_line_color}]{indent}[/color]",
+			"[bgcolor={bgcolor}]  [/bgcolor] ⏱️",
+			"[color={text_color}]",
+				" [ {timer_name} [b]<TIMER_END>[/b] ",
+			"[/color]",
+			"[color={elapsed_color}]",
+				"([i]{elapsed}[/i]) ",
+			"[/color]",
+			"[color={text_color}]",
+				"]",
+			"[/color]",
+		]).format(
 			{
+				"text_color": "#" + CLogColors.TEXT_COLOR.to_html(Engine.is_embedded_in_editor()),
 				"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
-				"indent": "|\t".repeat(indent_level),
+				"indent": "|   ".repeat(indent_level),
 				"bgcolor": "#" + bg_color.to_html(Engine.is_embedded_in_editor()),
 				"timer_name": timer_name,
 				"elapsed": "%.3f" % elapsed + "ms",
@@ -97,9 +125,17 @@ static func timer_cancel(id: int):
 		var indent_level = _timers[id]["indent_level"]
 		_timers.erase(id)
 		var bg_color = _get_bg_color(id)
+		var content = "".join([
+			"[color={indent_line_color}]{indent}[/color]",
+			"[bgcolor={bgcolor}]  [/bgcolor] ❌",
+			"[color={text_color}]",
+			" [ {timer_name} [b]<TIMER_CANCELED>[/b] ]",
+			"[/color]"
+		]).format(
 			{
+				"text_color": "#" + CLogColors.TEXT_COLOR.to_html(Engine.is_embedded_in_editor()),
 				"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
-				"indent": "|\t".repeat(indent_level),
+				"indent": "|   ".repeat(indent_level),
 				"bgcolor": "#" + bg_color.to_html(Engine.is_embedded_in_editor()),
 				"timer_name": timer_name,
 			},
