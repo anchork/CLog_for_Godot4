@@ -17,6 +17,8 @@ static var _once_keys: Dictionary[StringName, int] = { }
 static var _scheduled_messages: Dictionary[String, int] = { }
 
 
+## Error output. Shows an emphasized message in color with a "[ERROR]" prefix
+## and calls push_error().
 static func e(...args):
 	var message = _join(args)
 
@@ -29,6 +31,8 @@ static func e(...args):
 	_output(CLogColors.ERROR_COLOR, error_message.trim_suffix("\n"))
 
 
+## Warning output. Shows an emphasized message in color with a "[WARNING]" prefix
+## and calls push_warning().
 static func w(...args):
 	var message = _join(args)
 	push_warning(message)
@@ -40,6 +44,16 @@ static func v(...args):
 	var message = _join(args) + "\n"
 	message += "\n".join(_get_formatted_stack(3))
 	_output(CLogColors.TEXT_COLOR, message.trim_suffix("\n"))
+
+
+## Starts a timer and returns ID and outputs the timer name.
+## Call timer_end() with the ID to stop the timer.
+## [br]
+## [codeblock]
+## var timer1_id = CLog.timer_start("timer1")
+## # some processing...
+## CLog.timer_end(timer1_id)
+## [/codeblock]
 static func timer_start(timer_name: String) -> int:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return -1
@@ -78,6 +92,13 @@ static func timer_start(timer_name: String) -> int:
 	return _timer_id
 
 
+## Stops the timer with the ID and outputs the timer name and elapsed time.
+## [br]
+## [codeblock]
+## var timer1_id = CLog.timer_start("timer1")
+## # some processing...
+## CLog.timer_end(timer1_id)
+## [/codeblock]
 static func timer_end(id: int):
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
@@ -124,6 +145,13 @@ static func timer_end(id: int):
 		e("Timer %s is not running or has already ended." % id)
 
 
+## Cancels the timer with the ID and outputs the timer name.
+## [br]
+## [codeblock]
+## var timer1_id = CLog.timer_start("timer1")
+## # some processing...
+## CLog.timer_cancel(timer1_id)
+## [/codeblock]
 static func timer_cancel(id: int):
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
@@ -158,14 +186,21 @@ static func timer_cancel(id: int):
 		e("Timer %s is not running or has already ended." % id)
 
 
+## Normal output.
 static func o(...args):
 	_output(CLogColors.TEXT_COLOR, _join(args))
 
 
+## Outputs with the specified color.
+## [br]
+## [codeblock]
+## CLog.c(Color.MISTY_ROSE, "color print")
+## [/codeblock]
 static func c(color: Color, ...args):
 	_output(color, _join(args))
 
 
+## Outputs the message only once per key.
 static func once(key: String, ...args):
 	_output(CLogColors.TEXT_COLOR, _join(args), key)
 
