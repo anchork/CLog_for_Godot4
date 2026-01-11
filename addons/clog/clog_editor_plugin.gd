@@ -38,22 +38,32 @@ func _on_setting_changed():
 
 
 func _generate_colors_class_file():
-	var source_link_color = EditorInterface.get_editor_settings().get_setting(
-		"text_editor/theme/highlighting/safe_line_number_color",
+	var source_link_color = (
+		EditorInterface.get_editor_settings().get_setting(
+			"text_editor/theme/highlighting/safe_line_number_color",
+		)
 	)
-	var error_color = EditorInterface.get_editor_settings().get_setting(
-		"text_editor/theme/highlighting/breakpoint_color",
+	var error_color = (
+		EditorInterface.get_editor_settings().get_setting(
+			"text_editor/theme/highlighting/breakpoint_color",
+		)
 	)
-	var warning_color = EditorInterface.get_editor_settings().get_setting(
-		"text_editor/theme/highlighting/executing_line_color",
+	var warning_color = (
+		EditorInterface.get_editor_settings().get_setting(
+			"text_editor/theme/highlighting/executing_line_color",
+		)
 	)
 
-	var text_color = EditorInterface.get_editor_settings().get_setting(
-		"text_editor/theme/highlighting/text_color",
+	var text_color = (
+		EditorInterface.get_editor_settings().get_setting(
+			"text_editor/theme/highlighting/text_color",
+		)
 	)
 
-	var comment_color = EditorInterface.get_editor_settings().get_setting(
-		"text_editor/theme/highlighting/comment_color",
+	var comment_color = (
+		EditorInterface.get_editor_settings().get_setting(
+			"text_editor/theme/highlighting/comment_color",
+		)
 	)
 
 	var buf = (
