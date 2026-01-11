@@ -23,24 +23,10 @@ static func e(...args):
 	push_error(message)
 
 	var current_stack = get_stack()
-	var buf = "[b][ERROR][/b] " + message + "\n"
-	var start = 3
-	for i in range(start, current_stack.size() + 1):
-		buf += "".join(
-			[
-				"\t",
-				" ".repeat(i - start),
-				"[color={comment_color}]L ",
-					_get_source_link(_get_caller(i)),
-				"[/color]\n",
-			],
-		).format(
-			{
-				"comment_color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
-			},
-		)
+	var error_message = "[b][ERROR][/b] " + message + "\n"
+	error_message += "\n".join(_get_formatted_stack(3))
 
-	_output(CLogColors.ERROR_COLOR, buf.trim_suffix("\n"))
+	_output(CLogColors.ERROR_COLOR, error_message.trim_suffix("\n"))
 
 
 static func w(...args):
@@ -259,6 +245,29 @@ static func _get_source_link(stacktrace_line: Dictionary) -> String:
 		)
 
 	return formatted
+
+
+static func _get_formatted_stack(start_index: int = 0) -> Array[String]:
+	var current_stack = get_stack()
+	var formatted_lines: Array[String] = []
+	var use_alpha = Engine.is_embedded_in_editor()
+	for i in range(start_index, current_stack.size() + 1):
+		formatted_lines.append(
+			"".join(
+				[
+					"\t",
+					" ".repeat(i - start_index),
+					"[color={comment_color}]L ",
+					_get_source_link(_get_caller(i)),
+					"[/color]",
+				],
+			).format(
+				{
+					"comment_color": "#" + CLogColors.DIMMED_COLOR.to_html(use_alpha),
+				},
+			),
+		)
+	return formatted_lines
 
 
 static func _join(arr: Array) -> String:
