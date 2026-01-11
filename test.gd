@@ -5,6 +5,7 @@ func _ready() -> void:
 	_test_err()
 	_test_c()
 	_test_warn()
+	_test_v()
 	_test_timer()
 
 
@@ -30,6 +31,9 @@ func _test_c():
 
 func _test_warn():
 	CLog.w("waring")
+	
+func _test_v():
+	CLog.v("verbose")
 
 
 func _test_timer():
