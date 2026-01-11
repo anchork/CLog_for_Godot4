@@ -14,6 +14,11 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
+	# disconnect signals
+	for label in _connected_labels:
+		if label.meta_clicked.is_connected(_on_meta_clicked):
+			label.meta_clicked.disconnect(_on_meta_clicked)
+
 	if _refresh_timer:
 		_refresh_timer.queue_free()
 		_refresh_timer = null
@@ -117,9 +122,3 @@ func _open_script_at_line(path: String, line: int):
 	if script is Script:
 		EditorInterface.edit_resource(script)
 		EditorInterface.get_script_editor().goto_line(line - 1)
-
-
-func _disable_plugin() -> void:
-	for label in _connected_labels:
-		if label.meta_clicked.is_connected(_on_meta_clicked):
-			label.meta_clicked.disconnect(_on_meta_clicked)
