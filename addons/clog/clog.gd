@@ -79,6 +79,9 @@ static func timer_start(timer_name: String) -> int:
 
 
 static func timer_end(id: int):
+	if !OS.is_debug_build() && disable_output_on_release_mode:
+		return
+
 	if _timers.has(id):
 		var start_time = float(_timers[id]["start_time"])
 		var end_time = float(Time.get_ticks_usec())
@@ -122,6 +125,9 @@ static func timer_end(id: int):
 
 
 static func timer_cancel(id: int):
+	if !OS.is_debug_build() && disable_output_on_release_mode:
+		return
+
 	if _timers.has(id):
 		var timer_name = _timers[id]["name"]
 		var indent_level = _timers[id]["indent_level"]
