@@ -1,4 +1,4 @@
-class_name CLog
+@abstract class_name CLog
 
 static var disable_output_on_release_mode = true
 static var _timers: Dictionary = { }

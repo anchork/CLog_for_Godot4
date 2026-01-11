@@ -54,7 +54,7 @@ func _generate_colors_class_file():
 	var buf = (
 		"\n".join(
 			[
-				"class_name CLogColors",
+				"@abstract class_name CLogColors",
 				"\n",
 				"const SOURCE_LINK_COLOR = Color{source_link_color}",
 				"const TEXT_COLOR = Color{text_color}",

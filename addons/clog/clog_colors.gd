@@ -1,5 +1,4 @@
-class_name CLogColors
-
+@abstract class_name CLogColors
 
 const SOURCE_LINK_COLOR = Color(0.81, 0.978, 0.82, 0.75)
 const TEXT_COLOR = Color(0.81, 0.815, 0.82, 1.0)
