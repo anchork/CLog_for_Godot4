@@ -35,6 +35,11 @@ static func w(...args):
 	_output(CLogColors.WARNING_COLOR, "[b][WARNING][/b] " + message)
 
 
+## Verbose output. Shows a message with a stack trace without an error.
+static func v(...args):
+	var message = _join(args) + "\n"
+	message += "\n".join(_get_formatted_stack(3))
+	_output(CLogColors.TEXT_COLOR, message.trim_suffix("\n"))
 static func timer_start(timer_name: String) -> int:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return -1
