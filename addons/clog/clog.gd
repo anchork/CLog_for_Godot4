@@ -47,20 +47,26 @@ static func timer_start(timer_name: String) -> int:
 	_timer_id += 1
 	var indent_level = _timers.size()
 	var bg_color = _get_bg_color(_timer_id)
-	var content: String = "".join([
-		"[color={indent_line_color}]{indent}[/color]",
-		"[bgcolor={bgcolor}]  [/bgcolor] 🚀 ",
-		"[color={text_color}]",
-			"[ {timer_name} [b]<TIMER_START>[/b] ]",
-		"[/color]"
-	]).format({
-		"text_color": "#"
-				+ CLogColors.TEXT_COLOR.to_html(Engine.is_embedded_in_editor()),
-		"indent": "|   ".repeat(indent_level),
-		"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
-		"bgcolor": "#" + bg_color.to_html(Engine.is_embedded_in_editor()),
-		"timer_name": timer_name,
-	})
+	var use_alpha = Engine.is_embedded_in_editor()
+	var content: String = (
+		"".join(
+			[
+				"[color={indent_line_color}]{indent}[/color]",
+				"[bgcolor={bgcolor}]  [/bgcolor] 🚀 ",
+				"[color={text_color}]",
+				"[ {timer_name} [b]<TIMER_START>[/b] ]",
+				"[/color]",
+			],
+		).format(
+			{
+				"text_color": "#" + CLogColors.TEXT_COLOR.to_html(use_alpha),
+				"indent": "|   ".repeat(indent_level),
+				"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(use_alpha),
+				"bgcolor": "#" + bg_color.to_html(use_alpha),
+				"timer_name": timer_name,
+			},
+		)
+	)
 
 	_timers[_timer_id] = {
 		"name": timer_name,
@@ -81,28 +87,33 @@ static func timer_end(id: int):
 		var indent_level = _timers[id]["indent_level"]
 
 		var bg_color = _get_bg_color(id)
-		var content = "".join([
-			"[color={indent_line_color}]{indent}[/color]",
-			"[bgcolor={bgcolor}]  [/bgcolor] ⏱️",
-			"[color={text_color}]",
-				" [ {timer_name} [b]<TIMER_END>[/b] ",
-			"[/color]",
-			"[color={elapsed_color}]",
-				"([i]{elapsed}[/i]) ",
-			"[/color]",
-			"[color={text_color}]",
-				"]",
-			"[/color]",
-		]).format(
-			{
-				"text_color": "#" + CLogColors.TEXT_COLOR.to_html(Engine.is_embedded_in_editor()),
-				"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
-				"indent": "|   ".repeat(indent_level),
-				"bgcolor": "#" + bg_color.to_html(Engine.is_embedded_in_editor()),
-				"timer_name": timer_name,
-				"elapsed": "%.3f" % elapsed + "ms",
-				"elapsed_color": "#" + CLogColors.WARNING_COLOR.to_html(Engine.is_embedded_in_editor()),
-			},
+		var use_alpha = Engine.is_embedded_in_editor()
+		var content = (
+			"".join(
+				[
+					"[color={indent_line_color}]{indent}[/color]",
+					"[bgcolor={bgcolor}]  [/bgcolor] ⏱️",
+					"[color={text_color}]",
+					" [ {timer_name} [b]<TIMER_END>[/b] ",
+					"[/color]",
+					"[color={elapsed_color}]",
+					"([i]{elapsed}[/i]) ",
+					"[/color]",
+					"[color={text_color}]",
+					"]",
+					"[/color]",
+				],
+			).format(
+				{
+					"text_color": "#" + CLogColors.TEXT_COLOR.to_html(use_alpha),
+					"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(use_alpha),
+					"indent": "|   ".repeat(indent_level),
+					"bgcolor": "#" + bg_color.to_html(use_alpha),
+					"timer_name": timer_name,
+					"elapsed": "%.3f" % elapsed + "ms",
+					"elapsed_color": "#" + CLogColors.WARNING_COLOR.to_html(use_alpha),
+				},
+			)
 		)
 		_output(CLogColors.TEXT_COLOR, content)
 		_timers.erase(id)
@@ -116,20 +127,25 @@ static func timer_cancel(id: int):
 		var indent_level = _timers[id]["indent_level"]
 		_timers.erase(id)
 		var bg_color = _get_bg_color(id)
-		var content = "".join([
-			"[color={indent_line_color}]{indent}[/color]",
-			"[bgcolor={bgcolor}]  [/bgcolor] ❌",
-			"[color={text_color}]",
-			" [ {timer_name} [b]<TIMER_CANCELED>[/b] ]",
-			"[/color]"
-		]).format(
-			{
-				"text_color": "#" + CLogColors.TEXT_COLOR.to_html(Engine.is_embedded_in_editor()),
-				"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
-				"indent": "|   ".repeat(indent_level),
-				"bgcolor": "#" + bg_color.to_html(Engine.is_embedded_in_editor()),
-				"timer_name": timer_name,
-			},
+		var use_alpha = Engine.is_embedded_in_editor()
+		var content = (
+			"".join(
+				[
+					"[color={indent_line_color}]{indent}[/color]",
+					"[bgcolor={bgcolor}]  [/bgcolor] ❌",
+					"[color={text_color}]",
+					" [ {timer_name} [b]<TIMER_CANCELED>[/b] ]",
+					"[/color]",
+				],
+			).format(
+				{
+					"text_color": "#" + CLogColors.TEXT_COLOR.to_html(use_alpha),
+					"indent_line_color": "#" + CLogColors.DIMMED_COLOR.to_html(use_alpha),
+					"indent": "|   ".repeat(indent_level),
+					"bgcolor": "#" + bg_color.to_html(use_alpha),
+					"timer_name": timer_name,
+				},
+			)
 		)
 		_output(CLogColors.TEXT_COLOR, content)
 	else:
@@ -158,20 +174,25 @@ static func _output(color: Color, message: String, key: String = ""):
 		if _once_keys.has(key):
 			return
 
-	var formatted_message = "".join([
-		"[color={line_color}]",
-			"[{source_link}]",
-		"[/color]",
-		"[color={color}]",
-			"{message}",
-		"[/color]",
-	]).format(
-		{
-			"line_color": "#" + CLogColors.SOURCE_LINK_COLOR.to_html(Engine.is_embedded_in_editor()),
-			"source_link": source_link,
-			"color": "#" + color.to_html(Engine.is_embedded_in_editor()),
-			"message": " " + message,
-		},
+	var use_alpha = Engine.is_embedded_in_editor()
+	var formatted_message = (
+		"".join(
+			[
+				"[color={line_color}]",
+				"[{source_link}]",
+				"[/color]",
+				"[color={color}]",
+				"{message}",
+				"[/color]",
+			],
+		).format(
+			{
+				"line_color": "#" + CLogColors.SOURCE_LINK_COLOR.to_html(use_alpha),
+				"source_link": source_link,
+				"color": "#" + color.to_html(use_alpha),
+				"message": " " + message,
+			},
+		)
 	)
 
 	if _last_output == formatted_message:
@@ -200,15 +221,18 @@ static func _schedule_flush(message: String):
 
 
 static func _flush(message: String):
+	var use_alpha = Engine.is_embedded_in_editor()
 	if _scheduled_messages.has(message):
 		var count = _scheduled_messages[message] + 1
 		print_rich(
-			"[color={color}] └ (repeated {count}x)[/color]".format(
-				{
-					"color": "#" + CLogColors.DIMMED_COLOR.to_html(Engine.is_embedded_in_editor()),
-					"count": count,
-				},
-			)
+			(
+				"[color={color}] └ (repeated {count}x)[/color]".format(
+					{
+						"color": "#" + CLogColors.DIMMED_COLOR.to_html(use_alpha),
+						"count": count,
+					},
+				)
+			),
 		)
 
 	_scheduled_messages.erase(message)
@@ -236,17 +260,21 @@ static func _get_source_link(stacktrace_line: Dictionary) -> String:
 	var short_link = link.split("/")[-1]
 	var formatted = link
 	if Engine.is_embedded_in_editor():
-		formatted = "".join([
-			"[hint='{link}']",
-				"[url={link}]",
+		formatted = (
+			"".join(
+				[
+					"[hint='{link}']",
+					"[url={link}]",
 					"/{short_link}",
-				"[/url]",
-			"[/hint]",
-		]).format(
-			{
-				"link": link,
-				"short_link": short_link,
-			},
+					"[/url]",
+					"[/hint]",
+				],
+			).format(
+				{
+					"link": link,
+					"short_link": short_link,
+				},
+			)
 		)
 
 	return formatted
