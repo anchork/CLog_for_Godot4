@@ -20,37 +20,54 @@ In IDEs such as VS Code, you can jump to the source code by using **Ctrl + Click
 **VS Code Display Example:**
 ![VS Code Demo](media/vscode_demo.png)
 
+## Installation
+
+### Using the Godot Asset Library
+
+Open the **AssetLib** tab at the top of the Godot editor, search for **CLog**, and download it. Then go to Project → Project Settings → Plugins tab, and enable CLog.
+
+### Installing from a GitHub Release
+
+Download the latest release from the [GitHub releases page](https://github.com/anchork/CLog_for_Godot4/releases).
+In the Godot editor, open the **AssetLib** tab, click **Import**, and select the downloaded `clog-<version>.zip` file. Then go to Project → Project Settings → Plugins tab, and enable CLog.
+
 ## Usage
 
 ### Standard Output
-Logs a simple message to the console.
+Outputs a simple message to the console.
 ```gdscript
 CLog.o("Some message")
 CLog.o("Value A:", 100, "Value B:", true)
 ```
 
 ### Error Logging
-Logs an error message with a highlighted style.
+Outputs an error message with a highlighted style.
 ```gdscript
 CLog.e("An error occurred")
 ```
 
 ### Warning Logging
-Logs a warning message.
+Outputs a warning message.
 ```gdscript
 CLog.w("This is a warning")
 ```
 
 Both `CLog.e` and `CLog.w` internally call `push_error()` and `push_warning()` respectively. This ensures they appear in Godot's Debugger panel and are recorded in the built-in engine logs.
 
+### Verbose Logging
+Outputs a message with a stack trace without an error.
+```gdscript
+CLog.v("This is a verbose message")
+```
+
 ### Custom Color Output
-Logs a message using a specific color.
+Outputs a message using a specific color.
 ```gdscript
 CLog.c(Color.ORANGE, "Custom orange message")
 ```
 
 ### Once (Log once by key)
-Logs a message only once for a specific unique key. This is ideal for logging events inside `_process()` or loops without flooding the console.
+Outputs a message only once for a specific unique key. This is ideal for logging events inside `_process()` or loops without flooding the console.
 ```gdscript
 func _process(_delta: float):
     # This will be printed only once for the key &"start_processing"
