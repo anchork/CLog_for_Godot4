@@ -1,4 +1,14 @@
 @abstract class_name CLog
+## Adds a source link to the line header.
+## Converts node paths or node IDs into node links when present.
+## [codeblock]
+## CLog.o("Normal output") # normal output
+## CLog.e("Error output") # with [ERROR] tag and stack trace
+## CLog.w("Warning output") # with [WARNING] tag
+## CLog.v("Verbose output") # with a stack trace without an error
+## CLog.c(Color.ORANGE, "Color output") # with a custom color
+## CLog.once(&"key", "Once output") # the message only once
+## [/codeblock]
 
 static var disable_output_on_release_mode = true
 static var _timers: Dictionary = { }
