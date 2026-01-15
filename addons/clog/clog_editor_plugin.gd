@@ -3,6 +3,8 @@ extends EditorPlugin
 
 var _connected_labels: Array[RichTextLabel] = []
 var _refresh_timer: Timer
+var _target_node_path: NodePath
+var _target_scene: Node
 
 
 func _enable_plugin() -> void:
@@ -29,6 +31,8 @@ func _on_deferred():
 	_setup_timer()
 	_refresh_label_connections()
 	EditorInterface.get_editor_settings().settings_changed.connect(_on_setting_changed)
+
+	scene_changed.connect(_on_scene_changed)
 
 
 func _on_setting_changed():
@@ -116,10 +120,17 @@ func _refresh_label_connections():
 			_connected_labels.append(label)
 
 
+func _on_scene_changed(scene: Node):
+	if scene != _target_scene:
+		_target_scene = null
+		return
+	_focus_node_in_scene_tree()
+
+
 func _on_meta_clicked(meta: Variant):
 	var meta_str = str(meta)
-	# expected "./path/to/file.gd:10 @_ready()"
 	if (meta_str.begins_with("./")
+		# expected "./path/to/file.gd:10 @_ready()"
 		&& meta_str.find(":") != -1
 		&& meta_str.find("@") != -1 ):
 		var path_and_other = meta_str.split(":")
@@ -128,6 +139,49 @@ func _on_meta_clicked(meta: Variant):
 
 		if FileAccess.file_exists(file_path):
 			_open_script_at_line(file_path, line_number)
+	elif meta_str.begins_with("__node_path__/"):
+		# expected "__node_path__/root/path/to/node"
+		_open_node_path(meta_str)
+
+
+func _open_node_path(meta_str: String):
+	var path = meta_str.trim_prefix("__node_path__/root/")
+	var scene_roots = EditorInterface.get_open_scene_roots()
+	var target_root_name = path.split("/")[0]
+	for node in scene_roots:
+		if target_root_name == node.name:
+			_target_scene = node
+			break
+
+	if _target_scene == null:
+		prints("the scene is not opened in the editor.")
+		return
+
+	_target_node_path = NodePath(path.split(_target_scene.name, true, 1)[1])
+
+	if _target_scene != EditorInterface.get_edited_scene_root():
+		EditorInterface.open_scene_from_path(_target_scene.scene_file_path)
+		return
+
+	_focus_node_in_scene_tree()
+
+
+func _focus_node_in_scene_tree():
+	var full_path = NodePath(str(_target_scene.get_path()) + str(_target_node_path))
+
+	var target_node = _target_scene.get_node_or_null(full_path)
+	if target_node == null:
+		print("target node is not found")
+		return
+
+	var owner = target_node.owner
+
+	if owner != null && owner != _target_scene:
+		full_path = owner.get_path()
+
+	EditorInterface.edit_node(_target_scene.get_node(full_path))
+
+	_target_scene = null
 
 
 func _open_script_at_line(path: String, line: int):
