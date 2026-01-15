@@ -15,6 +15,10 @@ run/main_scene="uid://dt6frhagkvxnd"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+TestAutoLoad="*res://test_scenes/test_auto_load.gd"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/clog/plugin.cfg", "res://addons/gdLinter/plugin.cfg", "res://addons/godot-vim/addons/godot-vim/plugin.cfg", "res://addons/script-tabs/plugin.cfg")
