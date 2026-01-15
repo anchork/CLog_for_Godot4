@@ -104,7 +104,10 @@ func _setup_timer():
 
 
 func _refresh_label_connections():
-	_connected_labels = _connected_labels.filter(func(label): return is_instance_valid(label))
+	_connected_labels = _connected_labels.filter(
+		func(label):
+			return is_instance_valid(label)
+	)
 
 	var labels = EditorInterface.get_base_control().find_children("*", "RichTextLabel", true, false)
 	for label in labels:
