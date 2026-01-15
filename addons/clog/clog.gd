@@ -346,8 +346,20 @@ static func _get_formatted_stack(start_index: int = 0) -> Array[String]:
 
 static func _join(arr: Array) -> String:
 	var r: Array[String] = []
+
+	if !Engine.is_embedded_in_editor():
+		for e in arr:
+			r.append(str(e))
+		return " ".join(r)
+
 	for e in arr:
-		r.append(str(e))
+		if e is NodePath:
+			r.append("[url=__node_path__%s]%s[/url]" % [str(e), str(e)])
+		elif e is Node:
+			r.append("[url=__node_path__%s]%s[/url]" % [str(e.get_path()), str(e)])
+		else:
+			r.append(str(e))
+
 	return " ".join(r)
 
 
