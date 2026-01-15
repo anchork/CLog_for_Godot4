@@ -364,11 +364,17 @@ static func _join(arr: Array) -> String:
 
 	for e in arr:
 		if e is NodePath:
-			r.append("[url=__node_path__%s]%s[/url]" % [str(e), str(e)])
+			var current_scene = Engine.get_main_loop().current_scene
+			if current_scene != null:
+				var node = current_scene.get_node_or_null(e)
+				if node.is_inside_tree() && node.owner != null:
+					r.append("[url=__node_path__%s]%s[/url]" % [str(e), str(e)])
+					continue
 		elif e is Node:
-			r.append("[url=__node_path__%s]%s[/url]" % [str(e.get_path()), str(e)])
-		else:
-			r.append(str(e))
+			if e.is_inside_tree() && e.owner != null:
+				r.append("[url=__node_path__%s]%s[/url]" % [str(e.get_path()), str(e)])
+				continue
+		r.append(str(e))
 
 	return " ".join(r)
 
