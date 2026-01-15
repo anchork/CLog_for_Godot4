@@ -6,6 +6,8 @@
 [node name="Test" type="Node2D"]
 script = ExtResource("1_37kl0")
 
+[node name="EmptyNode" type="Node" parent="."]
+
 [node name="Node" type="Node" parent="."]
 
 [node name="Node" type="Node" parent="Node"]
@@ -15,5 +17,11 @@ script = ExtResource("1_37kl0")
 [node name="Scene1" parent="." instance=ExtResource("2_ffhyn")]
 
 [node name="Scene2" parent="Scene1" instance=ExtResource("2_ffhyn")]
+
+[node name="Scene3" parent="Scene1/Scene2" instance=ExtResource("2_ffhyn")]
+
+[node name="Scene4" parent="Scene1/Scene2/Scene3" instance=ExtResource("2_ffhyn")]
+
+[node name="Scene5" parent="Scene1/Scene2/Scene3/Scene4" instance=ExtResource("2_ffhyn")]
 
 [node name="Scene3" parent="." instance=ExtResource("2_ffhyn")]

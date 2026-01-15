@@ -3,7 +3,7 @@ extends Node2D
 @onready var child_node = $Node
 @onready var grandchild_node = $Node/Node
 @onready var great_grandchild_node = $Node/Node/Node
-
+@onready var empty_node = $EmptyNode
 func _ready() -> void:
 	_test_output()
 	_test_err()
@@ -15,7 +15,11 @@ func _ready() -> void:
 
 func _test_output():
 	CLog.o("test")
-	
+	var node = Node.new()
+	node.name = "test"
+	empty_node.add_child(node)
+	CLog.o("instantiate node:", node)
+	CLog.o("instantiate node:", node.get_path())
 	CLog.o("node path jump 1:", child_node.get_path())
 	CLog.o("node path jump 2:", grandchild_node.get_path())
 	CLog.o("node path jump 3:", great_grandchild_node.get_path())
