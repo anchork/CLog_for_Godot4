@@ -4,8 +4,7 @@ extends EditorPlugin
 var _connected_labels: Array[RichTextLabel] = []
 var _refresh_timer: Timer
 var _target_node_path: NodePath
-var _target_scene: Node
-
+var _target_node_relative_path: NodePath
 
 func _enable_plugin() -> void:
 	pass
@@ -120,9 +119,8 @@ func _refresh_label_connections():
 			_connected_labels.append(label)
 
 
-func _on_scene_changed(scene: Node):
-	if scene != _target_scene:
-		_target_scene = null
+func _on_scene_changed(_scene: Node):
+	if _target_node_path.is_empty():
 		return
 	_focus_node_in_scene_tree()
 
@@ -139,49 +137,59 @@ func _on_meta_clicked(meta: Variant):
 
 		if FileAccess.file_exists(file_path):
 			_open_script_at_line(file_path, line_number)
-	elif meta_str.begins_with("__node_path__/"):
+	elif meta_str.begins_with("__node_info__"):
 		# expected "__node_path__/root/path/to/node"
 		_open_node_path(meta_str)
 
 
 func _open_node_path(meta_str: String):
-	var path = meta_str.trim_prefix("__node_path__/root/")
-	var scene_roots = EditorInterface.get_open_scene_roots()
-	var target_root_name = path.split("/")[0]
-	for node in scene_roots:
-		if target_root_name == node.name:
-			_target_scene = node
-			break
+	var split := meta_str.trim_prefix("__node_info__/root").split(";")
 
-	if _target_scene == null:
-		prints("the scene is not opened in the editor.")
+	if split.size() < 3:
+		print("CLog: Invalid link, ", meta_str)
 		return
 
-	_target_node_path = NodePath(path.split(_target_scene.name, true, 1)[1])
+	var node_path := split[0]
+	var relative_path := split[1]
+	var scene_file_path := split[2]
+	var scene_roots := EditorInterface.get_open_scene_roots()
 
-	if _target_scene != EditorInterface.get_edited_scene_root():
-		EditorInterface.open_scene_from_path(_target_scene.scene_file_path)
+	_target_node_path = node_path
+	_target_node_relative_path = relative_path
+
+	# scene is already editing.
+	if scene_file_path != EditorInterface.get_edited_scene_root().scene_file_path:
+		EditorInterface.open_scene_from_path(scene_file_path)
 		return
 
 	_focus_node_in_scene_tree()
 
 
 func _focus_node_in_scene_tree():
-	var full_path = NodePath(str(_target_scene.get_path()) + str(_target_node_path))
+	var scene_root = EditorInterface.get_edited_scene_root()
 
-	var target_node = _target_scene.get_node_or_null(full_path)
-	if target_node == null:
-		print("target node is not found")
+	if scene_root == null:
+		print("CLog: Edited scene root is not found")
 		return
 
-	var owner = target_node.owner
+	var path_in_editor = NodePath(str(scene_root.get_path()).path_join(str(_target_node_path)))
+	var target_node = scene_root.get_node_or_null(path_in_editor)
 
-	if owner != null && owner != _target_scene:
-		full_path = owner.get_path()
+	if target_node == null:
+		# couldn't reach target_node path.
+		# search with relative node path again.
+		path_in_editor = NodePath(
+			str(scene_root.get_path()).path_join(str(_target_node_relative_path)))
 
-	EditorInterface.edit_node(_target_scene.get_node(full_path))
+	target_node = scene_root.get_node_or_null(path_in_editor)
 
-	_target_scene = null
+	if target_node != null:
+		EditorInterface.edit_node(target_node)
+	else:
+		print("CLog: Node not found in scene: ", _target_node_path)
+
+	_target_node_path = ""
+	_target_node_relative_path = ""
 
 
 func _open_script_at_line(path: String, line: int):
