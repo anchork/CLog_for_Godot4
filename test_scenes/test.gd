@@ -1,8 +1,7 @@
 extends Node2D
 
+var _count:int = 0
 func _ready() -> void:
-	print_tree_pretty()
-	print_orphan_nodes()
 	_test_output()
 	_test_err()
 	_test_c()
@@ -20,6 +19,9 @@ func _test_output() -> void:
 
 func _physics_process(_delta: float) -> void:
 	CLog.once(StringName(get_path()), "once")
+	if _count < 20:
+		_count += 1
+		CLog.o("output 20 times")
 
 
 func _test_err() -> void:
