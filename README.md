@@ -16,7 +16,7 @@ Supports Godot 4.5 or later.
 
 *Note: Source navigation is implemented using a workaround. If navigation stops working, please try restarting the plugin or the editor.*
 
-In IDEs such as VS Code, you can jump to the source code by using **Ctrl + Click** on the file path.
+In IDEs such as VS Code, you can jump to the source code by using **Ctrl + Click** on the file path. However, as expected, the Node link jump feature does not work in VS Code.
 
 **VS Code Display Example:**
 ![VS Code Demo](media/vscode_demo.png)
@@ -96,5 +96,3 @@ By default, `CLog` suppresses output in release builds for performance and secur
 # Enable logging even in release mode
 CLog.disable_output_on_release_mode = false
 ```
-
-*This README was generated with the assistance of AI.*
