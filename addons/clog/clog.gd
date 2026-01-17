@@ -289,16 +289,20 @@ static func _flush(message: String) -> void:
 	var use_alpha = Engine.is_embedded_in_editor()
 	if _scheduled_messages.has(message):
 		var count = _scheduled_messages[message] + 1
-		print_rich(
-			(
-				"[color={color}] └ (repeated {count}x)[/color]".format(
-					{
-						"color": "#" + CLogColors.DIMMED_COLOR.to_html(use_alpha),
-						"count": count,
-					},
-				)
-			),
-		)
+		if count > 5:
+			print_rich(
+				(
+					"[color={color}] └ (repeated {count}x)[/color]".format(
+						{
+							"color": "#" + CLogColors.DIMMED_COLOR.to_html(use_alpha),
+							"count": count,
+						},
+					)
+				),
+			)
+		else:
+			for i in count:
+				print_rich(message)
 
 	_scheduled_messages.erase(message)
 	_last_output = ""
