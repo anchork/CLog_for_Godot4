@@ -29,7 +29,7 @@ static var _scheduled_messages: Dictionary[String, int] = { }
 
 ## Error output. Shows an emphasized message in color with a "[ERROR]" prefix
 ## and calls push_error().
-static func e(...args):
+static func e(...args) -> void:
 	push_error(_get_raw_message(args))
 
 	push_error(message)
@@ -43,13 +43,13 @@ static func e(...args):
 
 ## Warning output. Shows an emphasized message in color with a "[WARNING]" prefix
 ## and calls push_warning().
+static func w(...args) -> void:
 	push_warning(_get_raw_message(args))
 	_output(CLogColors.WARNING_COLOR, "[b][WARNING][/b] " + message)
 
 
 ## Verbose output. Shows a message with a stack trace without an error.
-static func v(...args):
-	var message = _join(args) + "\n"
+static func v(...args) -> void:
 	message += "\n".join(_get_formatted_stack(3))
 	_output(CLogColors.TEXT_COLOR, message.trim_suffix("\n"))
 
@@ -107,7 +107,7 @@ static func timer_start(timer_name: String) -> int:
 ## # some processing...
 ## CLog.timer_end(timer1_id)
 ## [/codeblock]
-static func timer_end(id: int):
+static func timer_end(id: int) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
 
@@ -160,7 +160,7 @@ static func timer_end(id: int):
 ## # some processing...
 ## CLog.timer_cancel(timer1_id)
 ## [/codeblock]
-static func timer_cancel(id: int):
+static func timer_cancel(id: int) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
 
@@ -195,8 +195,7 @@ static func timer_cancel(id: int):
 
 
 ## Normal output.
-static func o(...args):
-	_output(CLogColors.TEXT_COLOR, _join(args))
+static func o(...args) -> void:
 
 
 ## Outputs with the specified color.
@@ -204,18 +203,14 @@ static func o(...args):
 ## [codeblock]
 ## CLog.c(Color.MISTY_ROSE, "color print")
 ## [/codeblock]
-static func c(color: Color, ...args):
-	_output(color, _join(args))
+static func c(color: Color, ...args) -> void:
 
 
 ## Outputs the message only once per key.
-static func once(key: String, ...args):
-	_output(CLogColors.TEXT_COLOR, _join(args), key)
-
-
-static func _output(color: Color, message: String, key: String = ""):
+static func once(key: String, ...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
+static func _output(color: Color, message: String, key: String = "") -> void:
 	# var formatted_message = _format_message(message, _get_caller(3))
 	var source_link = _get_source_link(_get_caller(3))
 
@@ -255,7 +250,7 @@ static func _output(color: Color, message: String, key: String = ""):
 		_once_keys[key] = 0
 
 
-static func _schedule_flush(message: String):
+static func _schedule_flush(message: String) -> void:
 	if _scheduled_messages.has(message):
 		_scheduled_messages[message] += 1
 		return
@@ -269,7 +264,7 @@ static func _schedule_flush(message: String):
 	_flush(message)
 
 
-static func _flush(message: String):
+static func _flush(message: String) -> void:
 	var use_alpha = Engine.is_embedded_in_editor()
 	if _scheduled_messages.has(message):
 		var count = _scheduled_messages[message] + 1
