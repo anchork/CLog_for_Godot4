@@ -232,7 +232,6 @@ static func once(key: String, ...args) -> void:
 
 
 static func _output(color: Color, message: String, key: String = "") -> void:
-	# var formatted_message = _format_message(message, _get_caller(3))
 	var source_link = _get_source_link(_get_caller(3))
 
 	if !key.is_empty():
