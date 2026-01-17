@@ -1,27 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://dt6frhagkvxnd"]
+[gd_scene load_steps=2 format=3 uid="uid://dt6frhagkvxnd"]
 
 [ext_resource type="Script" uid="uid://bnmnsi6bbx1d3" path="res://test_scenes/test.gd" id="1_37kl0"]
-[ext_resource type="PackedScene" uid="uid://bp0xrbr0sd0bq" path="res://test_scenes/scene1/scene1.tscn" id="2_ffhyn"]
 
 [node name="Test" type="Node2D"]
 script = ExtResource("1_37kl0")
-
-[node name="EmptyNode" type="Node" parent="."]
-
-[node name="Node" type="Node" parent="."]
-
-[node name="Node" type="Node" parent="Node"]
-
-[node name="Node" type="Node" parent="Node/Node"]
-
-[node name="Scene1" parent="." instance=ExtResource("2_ffhyn")]
-
-[node name="Scene2" parent="Scene1" instance=ExtResource("2_ffhyn")]
-
-[node name="Scene3" parent="Scene1/Scene2" instance=ExtResource("2_ffhyn")]
-
-[node name="Scene4" parent="Scene1/Scene2/Scene3" instance=ExtResource("2_ffhyn")]
-
-[node name="Scene5" parent="Scene1/Scene2/Scene3/Scene4" instance=ExtResource("2_ffhyn")]
-
-[node name="Scene3" parent="." instance=ExtResource("2_ffhyn")]

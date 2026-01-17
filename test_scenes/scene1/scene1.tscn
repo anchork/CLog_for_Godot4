@@ -7,4 +7,4 @@ script = ExtResource("1_hpsc3")
 
 [node name="Scene1Child" type="Node" parent="."]
 
-[node name="Scene1Child2" type="Node" parent="Scene1Child"]
+[node name="Scene1Grandchild" type="Node" parent="Scene1Child"]
