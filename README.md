@@ -10,6 +10,7 @@ Supports Godot 4.5 or later.
 
 ## Features
 - **Source Navigation**: Clicking on a log entry in the console will take you directly to the source code.
+- **Node Link**: Passing a `Node` or `NodePath` creates a clickable link that selects the node in the Scene tree.
 - **Rich Text Output**: Supports colored logs and formatting.
 - **Performance Timers**: Measure execution time with starting, ending, and canceling timers.
 
