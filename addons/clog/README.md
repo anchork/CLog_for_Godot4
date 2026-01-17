@@ -10,12 +10,13 @@ Supports Godot 4.5 or later.
 
 ## Features
 - **Source Navigation**: Clicking on a log entry in the console will take you directly to the source code.
+- **Node Link**: Passing a `Node` or `NodePath` creates a clickable link that selects the node in the Scene tree.
 - **Rich Text Output**: Supports colored logs and formatting.
 - **Performance Timers**: Measure execution time with starting, ending, and canceling timers.
 
 *Note: Source navigation is implemented using a workaround. If navigation stops working, please try restarting the plugin or the editor.*
 
-In IDEs such as VS Code, you can jump to the source code by using **Ctrl + Click** on the file path.
+In IDEs such as VS Code, you can jump to the source code by using **Ctrl + Click** on the file path. However, as expected, the Node link jump feature does not work in VS Code.
 
 **VS Code Display Example:**
 ![VS Code Demo](media/vscode_demo.png)
@@ -95,5 +96,3 @@ By default, `CLog` suppresses output in release builds for performance and secur
 # Enable logging even in release mode
 CLog.disable_output_on_release_mode = false
 ```
-
-*This README was generated with the assistance of AI.*
