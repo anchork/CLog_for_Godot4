@@ -32,7 +32,8 @@ static var _scheduled_messages: Dictionary[String, int] = { }
 static func e(...args) -> void:
 	push_error(_get_raw_message(args))
 
-	push_error(message)
+	if !OS.is_debug_build() && disable_output_on_release_mode:
+		return
 
 	var current_stack = get_stack()
 	var error_message = "[b][ERROR][/b] " + message + "\n"
@@ -45,11 +46,15 @@ static func e(...args) -> void:
 ## and calls push_warning().
 static func w(...args) -> void:
 	push_warning(_get_raw_message(args))
+	if !OS.is_debug_build() && disable_output_on_release_mode:
+		return
 	_output(CLogColors.WARNING_COLOR, "[b][WARNING][/b] " + message)
 
 
 ## Verbose output. Shows a message with a stack trace without an error.
 static func v(...args) -> void:
+	if !OS.is_debug_build() && disable_output_on_release_mode:
+		return
 	message += "\n".join(_get_formatted_stack(3))
 	_output(CLogColors.TEXT_COLOR, message.trim_suffix("\n"))
 
@@ -196,6 +201,8 @@ static func timer_cancel(id: int) -> void:
 
 ## Normal output.
 static func o(...args) -> void:
+	if !OS.is_debug_build() && disable_output_on_release_mode:
+		return
 
 
 ## Outputs with the specified color.
@@ -204,6 +211,8 @@ static func o(...args) -> void:
 ## CLog.c(Color.MISTY_ROSE, "color print")
 ## [/codeblock]
 static func c(color: Color, ...args) -> void:
+	if !OS.is_debug_build() && disable_output_on_release_mode:
+		return
 
 
 ## Outputs the message only once per key.
