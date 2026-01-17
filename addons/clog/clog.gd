@@ -35,6 +35,7 @@ static func e(...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
 
+	var message = _get_formatted_message(args)
 	var current_stack = get_stack()
 	var error_message = "[b][ERROR][/b] " + message + "\n"
 	error_message += "\n".join(_get_formatted_stack(3))
@@ -48,6 +49,8 @@ static func w(...args) -> void:
 	push_warning(_get_raw_message(args))
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
+
+	var message = _get_formatted_message(args)
 	_output(CLogColors.WARNING_COLOR, "[b][WARNING][/b] " + message)
 
 
@@ -55,6 +58,8 @@ static func w(...args) -> void:
 static func v(...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
+
+	var message = _get_formatted_message(args) + "\n"
 	message += "\n".join(_get_formatted_stack(3))
 	_output(CLogColors.TEXT_COLOR, message.trim_suffix("\n"))
 
@@ -203,6 +208,7 @@ static func timer_cancel(id: int) -> void:
 static func o(...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
+	_output(CLogColors.TEXT_COLOR, _get_formatted_message(args))
 
 
 ## Outputs with the specified color.
@@ -214,11 +220,17 @@ static func c(color: Color, ...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
 
+	_output(color, _get_formatted_message(args))
+
 
 ## Outputs the message only once per key.
 static func once(key: String, ...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
+
+	_output(CLogColors.TEXT_COLOR, _get_formatted_message(args), key)
+
+
 static func _output(color: Color, message: String, key: String = "") -> void:
 	# var formatted_message = _format_message(message, _get_caller(3))
 	var source_link = _get_source_link(_get_caller(3))
@@ -356,27 +368,74 @@ static func _get_formatted_stack(start_index: int = 0) -> Array[String]:
 	return formatted_lines
 
 
-static func _join(arr: Array) -> String:
+static func _get_formatted_message(arr: Array) -> String:
 	var r: Array[String] = []
 
 	if !Engine.is_embedded_in_editor():
 		return _get_raw_message(arr)
 
 	for e in arr:
+		var link = ""
 		if e is NodePath:
 			var current_scene = Engine.get_main_loop().current_scene
 			if current_scene != null:
 				var node = current_scene.get_node_or_null(e)
-				if node.is_inside_tree() && node.owner != null:
-					r.append("[url=__node_path__%s]%s[/url]" % [str(e), str(e)])
-					continue
+				link = _format_node_link(node, str(e))
 		elif e is Node:
-			if e.is_inside_tree() && e.owner != null:
-				r.append("[url=__node_path__%s]%s[/url]" % [str(e.get_path()), str(e)])
-				continue
-		r.append(str(e))
+			link = _format_node_link(e, str(e))
+
+		if !link.is_empty():
+			r.append(link)
+		else:
+			r.append(str(e))
 
 	return " ".join(r)
+
+
+static func _format_node_link(node: Node, display_text: String) -> String:
+	if node == null || !node.is_inside_tree():
+		return ""
+
+	var node_path := str(node.get_path())
+	var relative_path := ""
+	var file_path := ""
+
+	if node.owner != null:
+		# not root node.
+		relative_path = str(node.owner.get_path_to(node))
+		file_path = node.owner.scene_file_path
+	else:
+		# root node. it has no owner.
+		file_path = node.scene_file_path
+
+	if file_path.is_empty():
+		# instantiated node by script.
+		# has no owner, so walk up the parent nodes to find scene_file_path.
+		var parent: Node = node.get_parent()
+		while file_path.is_empty() && parent != null:
+			file_path = parent.scene_file_path
+			parent = parent.get_parent()
+
+	if file_path.is_empty():
+		return ""
+
+	return "".join(
+		[
+			"[hint={node_path} <{file_path}>]",
+			"[url=__node_info__{node_path};{relative_path};{file_path}]",
+			"{text}",
+			"[/url]",
+			"[/hint]",
+		],
+	).format(
+		{
+			"node_path": node_path,
+			"relative_path": relative_path,
+			"file_path": file_path,
+			"text": display_text,
+		},
+	)
+
 
 static func _get_raw_message(arr: Array):
 	var r: Array[String] = []
@@ -395,3 +454,16 @@ static func _get_caller(backward_index: int) -> Dictionary:
 
 static func _get_bg_color(seed: int) -> Color:
 	return _timer_bg_colors[seed % _timer_bg_colors.size()]
+
+
+static func _get_root_child(node: Node) -> Node:
+	var root = node.get_tree().root
+	if node == root:
+		return node
+
+	var parent = node.get_parent()
+	while parent != null and parent != root:
+		node = parent
+		parent = node.get_parent()
+
+	return node
