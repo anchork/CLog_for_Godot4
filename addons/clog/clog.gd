@@ -38,7 +38,7 @@ static func e(...args) -> void:
 	var message = _get_formatted_message(args)
 	var current_stack = get_stack()
 	var error_message = "[b][ERROR][/b] " + message + "\n"
-	error_message += "\n".join(_get_formatted_stack(3))
+	error_message += "\n".join(_get_formatted_stack(3, "ERROR"))
 
 	_output(CLogColors.ERROR_COLOR, error_message.trim_suffix("\n"))
 
@@ -60,7 +60,7 @@ static func v(...args) -> void:
 		return
 
 	var message = _get_formatted_message(args) + "\n"
-	message += "\n".join(_get_formatted_stack(3))
+	message += "\n".join(_get_formatted_stack(3, "VERBOSE"))
 	_output(CLogColors.TEXT_COLOR, message.trim_suffix("\n"))
 
 
@@ -349,14 +349,21 @@ static func _get_source_link(stacktrace_line: Dictionary) -> String:
 	return formatted
 
 
-static func _get_formatted_stack(start_index: int = 0) -> Array[String]:
+static func _get_formatted_stack(start_index: int = 0, hint: String = "") -> Array[String]:
 	var current_stack = get_stack()
 	var formatted_lines: Array[String] = []
-	var use_alpha = Engine.is_embedded_in_editor()
+	var in_editor = Engine.is_embedded_in_editor()
+
 	for i in range(start_index, current_stack.size() + 1):
+		# Add an invisible tag to allow filtering.
+		var hint_str = ""
+		if in_editor && !hint.is_empty():
+			hint_str = "[hint={hint}][/hint]"
+
 		formatted_lines.append(
 			"".join(
 				[
+					hint_str,
 					"\t",
 					" ".repeat(i - start_index),
 					"[color={comment_color}] └ ",
@@ -365,7 +372,8 @@ static func _get_formatted_stack(start_index: int = 0) -> Array[String]:
 				],
 			).format(
 				{
-					"comment_color": "#" + CLogColors.DIMMED_COLOR.to_html(use_alpha),
+					"hint": hint,
+					"comment_color": "#" + CLogColors.DIMMED_COLOR.to_html(in_editor),
 				},
 			),
 		)
