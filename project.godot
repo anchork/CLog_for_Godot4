@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 TestAutoLoad="*res://test_scenes/test_auto_load.gd"
 
+[debug]
+
+gdscript/warnings/untyped_declaration=2
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/clog/plugin.cfg", "res://addons/gdLinter/plugin.cfg", "res://addons/godot_vim/plugin.cfg", "res://addons/script-tabs/plugin.cfg")
