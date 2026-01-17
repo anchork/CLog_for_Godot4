@@ -341,7 +341,7 @@ static func _get_formatted_stack(start_index: int = 0) -> Array[String]:
 				[
 					"\t",
 					" ".repeat(i - start_index),
-					"[color={comment_color}]L ",
+					"[color={comment_color}] └ ",
 					_get_source_link(_get_caller(i)),
 					"[/color]",
 				],
