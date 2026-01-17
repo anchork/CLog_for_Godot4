@@ -30,7 +30,7 @@ static var _scheduled_messages: Dictionary[String, int] = { }
 ## Error output. Shows an emphasized message in color with a "[ERROR]" prefix
 ## and calls push_error().
 static func e(...args):
-	var message = _join(args)
+	push_error(_get_raw_message(args))
 
 	push_error(message)
 
@@ -43,9 +43,7 @@ static func e(...args):
 
 ## Warning output. Shows an emphasized message in color with a "[WARNING]" prefix
 ## and calls push_warning().
-static func w(...args):
-	var message = _join(args)
-	push_warning(message)
+	push_warning(_get_raw_message(args))
 	_output(CLogColors.WARNING_COLOR, "[b][WARNING][/b] " + message)
 
 
@@ -358,9 +356,7 @@ static func _join(arr: Array) -> String:
 	var r: Array[String] = []
 
 	if !Engine.is_embedded_in_editor():
-		for e in arr:
-			r.append(str(e))
-		return " ".join(r)
+		return _get_raw_message(arr)
 
 	for e in arr:
 		if e is NodePath:
@@ -376,6 +372,12 @@ static func _join(arr: Array) -> String:
 				continue
 		r.append(str(e))
 
+	return " ".join(r)
+
+static func _get_raw_message(arr: Array):
+	var r: Array[String] = []
+	for e in arr:
+		r.append(str(e))
 	return " ".join(r)
 
 
