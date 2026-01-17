@@ -61,7 +61,7 @@ static func v(...args) -> void:
 
 	var message = _get_formatted_message(args) + "\n"
 	message += "\n".join(_get_formatted_stack(3, "VERBOSE"))
-	_output(CLogColors.TEXT_COLOR, message.trim_suffix("\n"))
+	_output(CLogColors.TEXT_COLOR,"[b][VERBOSE][/b] " + message.trim_suffix("\n"))
 
 
 ## Starts a timer and returns ID and outputs the timer name.
@@ -208,7 +208,7 @@ static func timer_cancel(id: int) -> void:
 static func o(...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
-	_output(CLogColors.TEXT_COLOR, _get_formatted_message(args))
+	_output(CLogColors.TEXT_COLOR, "[b][INFO][/b] " + _get_formatted_message(args))
 
 
 ## Outputs with the specified color.
@@ -220,7 +220,7 @@ static func c(color: Color, ...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
 
-	_output(color, _get_formatted_message(args))
+	_output(color, "[b][INFO][/b] " + _get_formatted_message(args))
 
 
 ## Outputs the message only once per key.
@@ -228,7 +228,7 @@ static func once(key: String, ...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
 
-	_output(CLogColors.TEXT_COLOR, _get_formatted_message(args), key)
+	_output(CLogColors.TEXT_COLOR, "[b][INFO][/b] " + _get_formatted_message(args), key)
 
 
 static func _output(color: Color, message: String, key: String = "") -> void:
