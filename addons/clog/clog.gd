@@ -38,7 +38,7 @@ static func e(...args) -> void:
 	var message = _get_formatted_message(args)
 	var current_stack = get_stack()
 	var error_message = "[b][ERROR][/b] " + message + "\n"
-	error_message += "\n".join(_get_formatted_stack(3, "ERROR"))
+	error_message += "\n".join(_get_formatted_stack(4, "ERROR"))
 
 	_output(CLogColors.ERROR_COLOR, error_message.trim_suffix("\n"))
 
@@ -60,7 +60,7 @@ static func v(...args) -> void:
 		return
 
 	var message = _get_formatted_message(args) + "\n"
-	message += "\n".join(_get_formatted_stack(3, "VERBOSE"))
+	message += "\n".join(_get_formatted_stack(4, "VERBOSE"))
 	_output(CLogColors.TEXT_COLOR,"[b][VERBOSE][/b] " + message.trim_suffix("\n"))
 
 
