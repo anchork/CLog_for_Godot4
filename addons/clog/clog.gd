@@ -322,31 +322,33 @@ static func _get_source_link(stacktrace_line: Dictionary) -> String:
 	var project_path = ProjectSettings.globalize_path("res://")
 	var file_path = full_path.trim_prefix(project_path)
 	var link = (
-		"./{file_path}:{line_number} @{function}()".format(
+		"{file_path}:{line_number}".format(
 			{
 				"file_path": file_path,
 				"line_number": str(stacktrace_line["line"]),
-				"function": stacktrace_line["function"],
 			},
 		)
 	)
 
 	var short_link = link.split("/")[-1]
-	var formatted = link
+	var function_name = stacktrace_line["function"]
+	var formatted = "./%s @%s()" % [link, function_name]
 	if Engine.is_embedded_in_editor():
 		formatted = (
 			"".join(
 				[
 					"[hint='{link}']",
-					"[url={link}]",
-					"/{short_link}",
+					"[url={scheme}{link}]",
+					"/{short_link} @{function}()",
 					"[/url]",
 					"[/hint]",
 				],
 			).format(
 				{
+					"scheme": "res://" if is_godot_4_6_or_higher() else "./",
 					"link": link,
 					"short_link": short_link,
+					"function": function_name,
 				},
 			)
 		)
