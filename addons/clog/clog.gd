@@ -479,7 +479,7 @@ static func _get_root_child(node: Node) -> Node:
 		return node
 
 	var parent = node.get_parent()
-	while parent != null and parent != root:
+	while parent != null && parent != root:
 		node = parent
 		parent = node.get_parent()
 
