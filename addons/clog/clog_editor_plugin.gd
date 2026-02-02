@@ -6,6 +6,7 @@ var _refresh_timer: Timer
 var _target_node_path: NodePath
 var _target_node_relative_path: NodePath
 
+
 func _enable_plugin() -> void:
 	pass
 
@@ -127,17 +128,18 @@ func _on_scene_changed(_scene: Node):
 
 func _on_meta_clicked(meta: Variant):
 	var meta_str = str(meta)
-	if (meta_str.begins_with("./")
-		# expected "./path/to/file.gd:10 @_ready()"
-		&& meta_str.find(":") != -1
-		&& meta_str.find("@") != -1 ):
-		var path_and_other = meta_str.split(":")
-		var file_path = path_and_other[0].replace("./", "res://") # "res" + "//path..."
-		var line_number = int(path_and_other[1].split("@")[0].strip_edges())
+	if !CLog.is_godot_4_6_or_higher():
+		if (meta_str.begins_with("./")
+			&& meta_str.find(":") != -1 ):
+			# expected "./path/to/file.gd:10 @_ready()"
+			var path_and_other = meta_str.split(":")
+			var file_path = path_and_other[0].replace("./", "res://") # "res" + "//path..."
+			var line_number = int(path_and_other[-1])
 
-		if FileAccess.file_exists(file_path):
-			_open_script_at_line(file_path, line_number)
-	elif meta_str.begins_with("__node_info__"):
+			if FileAccess.file_exists(file_path):
+				_open_script_at_line(file_path, line_number)
+
+	if meta_str.begins_with("__node_info__"):
 		# expected "__node_path__/root/path/to/node"
 		_open_node_path(meta_str)
 
@@ -179,7 +181,8 @@ func _focus_node_in_scene_tree():
 		# couldn't reach target_node path.
 		# search with relative node path again.
 		path_in_editor = NodePath(
-			str(scene_root.get_path()).path_join(str(_target_node_relative_path)))
+			str(scene_root.get_path()).path_join(str(_target_node_relative_path)),
+		)
 
 	target_node = scene_root.get_node_or_null(path_in_editor)
 
