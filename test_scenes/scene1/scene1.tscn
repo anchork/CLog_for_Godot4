@@ -1,10 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://bp0xrbr0sd0bq"]
+[gd_scene format=3 uid="uid://bp0xrbr0sd0bq"]
 
 [ext_resource type="Script" uid="uid://dx1uiqptnirhi" path="res://test_scenes/scene1/scene_1.gd" id="1_hpsc3"]
 
-[node name="Scene1" type="Node"]
+[node name="Scene1" type="Node" unique_id=583019071]
 script = ExtResource("1_hpsc3")
 
-[node name="Scene1Child" type="Node" parent="."]
+[node name="Scene1Child" type="Node" parent="." unique_id=1671720494]
 
-[node name="Scene1Grandchild" type="Node" parent="Scene1Child"]
+[node name="Scene1Grandchild" type="Node" parent="Scene1Child" unique_id=195987371]
