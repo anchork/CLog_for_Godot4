@@ -259,7 +259,7 @@ static func _output(color: Color, message: String, tag: String = "", key: String
 				"line_color": "#" + CLogColors.SOURCE_LINK_COLOR.to_html(use_alpha),
 				"source_link": source_link,
 				"color": "#" + color.to_html(use_alpha),
-				"tag": "" if tag.is_empty() else "[b][" + tag + "][/b]",
+				"tag": "" if tag.is_empty() else " [b][" + tag + "][/b]",
 				"message": " " + message,
 			},
 		)
