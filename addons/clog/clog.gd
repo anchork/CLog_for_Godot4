@@ -10,6 +10,11 @@
 ## CLog.once(&"key", "Once output") # Log only once per key
 ## [/codeblock]
 
+const ERROR_TAG = "ERROR"
+const WARNING_TAG = "WARNING"
+const INFO_TAG = "INFO"
+const VERBOSE_TAG = "VERBOSE"
+
 static var disable_output_on_release_mode = true
 static var _timers: Dictionary = { }
 static var _timer_id: int = 0
@@ -37,10 +42,10 @@ static func e(...args) -> void:
 
 	var message = _get_formatted_message(args)
 	var current_stack = get_stack()
-	var error_message = "[b][ERROR][/b] " + message + "\n"
-	error_message += "\n".join(_get_formatted_stack(4, "ERROR"))
+	var error_message = message + "\n"
+	error_message += "\n".join(_get_formatted_stack(4, ERROR_TAG))
 
-	_output(CLogColors.ERROR_COLOR, error_message.trim_suffix("\n"))
+	_output(CLogColors.ERROR_COLOR, error_message.trim_suffix("\n"), ERROR_TAG)
 
 
 ## Warning output. Shows an emphasized message in color with a "[WARNING]" prefix
@@ -51,7 +56,7 @@ static func w(...args) -> void:
 		return
 
 	var message = _get_formatted_message(args)
-	_output(CLogColors.WARNING_COLOR, "[b][WARNING][/b] " + message)
+	_output(CLogColors.WARNING_COLOR, message, WARNING_TAG)
 
 
 ## Verbose output. Shows a message with a stack trace without an error.
@@ -60,8 +65,8 @@ static func v(...args) -> void:
 		return
 
 	var message = _get_formatted_message(args) + "\n"
-	message += "\n".join(_get_formatted_stack(4, "VERBOSE"))
-	_output(CLogColors.TEXT_COLOR,"[b][VERBOSE][/b] " + message.trim_suffix("\n"))
+	message += "\n".join(_get_formatted_stack(4, VERBOSE_TAG))
+	_output(CLogColors.TEXT_COLOR, message.trim_suffix("\n"), VERBOSE_TAG)
 
 
 ## Starts a timer and returns ID and outputs the timer name.
@@ -208,7 +213,7 @@ static func timer_cancel(id: int) -> void:
 static func o(...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
-	_output(CLogColors.TEXT_COLOR, "[b][INFO][/b] " + _get_formatted_message(args))
+	_output(CLogColors.TEXT_COLOR, _get_formatted_message(args), INFO_TAG)
 
 
 ## Outputs with the specified color.
@@ -220,7 +225,7 @@ static func c(color: Color, ...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
 
-	_output(color, "[b][INFO][/b] " + _get_formatted_message(args))
+	_output(color, _get_formatted_message(args), INFO_TAG)
 
 
 ## Outputs the message only once per key.
@@ -228,10 +233,10 @@ static func once(key: String, ...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
 
-	_output(CLogColors.TEXT_COLOR, "[b][INFO][/b] " + _get_formatted_message(args), key)
+	_output(CLogColors.TEXT_COLOR, _get_formatted_message(args), INFO_TAG, key)
 
 
-static func _output(color: Color, message: String, key: String = "") -> void:
+static func _output(color: Color, message: String, tag: String = "", key: String = "") -> void:
 	var source_link = _get_source_link(_get_caller(3))
 
 	if !key.is_empty():
@@ -246,7 +251,7 @@ static func _output(color: Color, message: String, key: String = "") -> void:
 				"[{source_link}]",
 				"[/color]",
 				"[color={color}]",
-				"{message}",
+				"{tag}{message}",
 				"[/color]",
 			],
 		).format(
@@ -254,6 +259,7 @@ static func _output(color: Color, message: String, key: String = "") -> void:
 				"line_color": "#" + CLogColors.SOURCE_LINK_COLOR.to_html(use_alpha),
 				"source_link": source_link,
 				"color": "#" + color.to_html(use_alpha),
+				"tag": "" if tag.is_empty() else "[b][" + tag + "][/b]",
 				"message": " " + message,
 			},
 		)
