@@ -66,6 +66,10 @@ func _test_node_link() -> void:
 		"Expect: Open 'scene1.tscn' -> Focus 'Scene1Child'",
 		nest_scene2.get_node(^"Scene1Child").get_path(),
 	)
+	CLog.o(
+		"Expect: Open 'scene1.tscn' -> Focus 'Scene1Child/Scene1Grandchild'",
+		nest_scene2.get_node(^"Scene1Child/Scene1Grandchild").get_path(),
+	)
 
 	CLog.c(Color.SALMON, "\n--- EDGE CASES ---")
 

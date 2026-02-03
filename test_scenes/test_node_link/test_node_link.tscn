@@ -1,21 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://bpiacncgt0auu"]
+[gd_scene format=3 uid="uid://bpiacncgt0auu"]
 
 [ext_resource type="Script" uid="uid://dtjyuk3qtpov1" path="res://test_scenes/test_node_link/test_node_link.gd" id="1_qeq6b"]
 [ext_resource type="PackedScene" uid="uid://bp0xrbr0sd0bq" path="res://test_scenes/scene1/scene1.tscn" id="2_a57d0"]
 
-[node name="TestNodeLink" type="Node"]
+[node name="TestNodeLink" type="Node" unique_id=185495364]
 script = ExtResource("1_qeq6b")
 
-[node name="EmptyNode" type="Node" parent="."]
+[node name="EmptyNode" type="Node" parent="." unique_id=1521814394]
 
-[node name="Node" type="Node" parent="."]
+[node name="Node" type="Node" parent="." unique_id=1532180120]
 
-[node name="Node" type="Node" parent="Node"]
+[node name="Node" type="Node" parent="Node" unique_id=470221938]
 
-[node name="Node" type="Node" parent="Node/Node"]
+[node name="Node" type="Node" parent="Node/Node" unique_id=454218015]
 
-[node name="Scene1" parent="." instance=ExtResource("2_a57d0")]
+[node name="Scene1" parent="." unique_id=1202389537 instance=ExtResource("2_a57d0")]
 
-[node name="Scene2" parent="Scene1" instance=ExtResource("2_a57d0")]
+[node name="Scene2" parent="Scene1" unique_id=1977326466 instance=ExtResource("2_a57d0")]
 
-[node name="Scene3" parent="." instance=ExtResource("2_a57d0")]
+[node name="Scene3" parent="." unique_id=725469785 instance=ExtResource("2_a57d0")]
