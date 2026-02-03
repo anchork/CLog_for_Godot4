@@ -140,7 +140,7 @@ func _on_meta_clicked(meta: Variant):
 				_open_script_at_line(file_path, line_number)
 
 	if meta_str.begins_with("__node_info__"):
-		# expected "__node_path__/root/path/to/node"
+		# expected "__node_info__/root/path/to/node;relative_path;scene_file_path"
 		_open_node_path(meta_str)
 
 
@@ -159,7 +159,7 @@ func _open_node_path(meta_str: String):
 	_target_node_path = node_path
 	_target_node_relative_path = relative_path
 
-	# scene is already editing.
+	# If target scene is not currently open, open it first
 	if scene_file_path != EditorInterface.get_edited_scene_root().scene_file_path:
 		EditorInterface.open_scene_from_path(scene_file_path)
 		return
