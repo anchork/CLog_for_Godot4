@@ -123,7 +123,7 @@ func _refresh_label_connections():
 func _on_scene_changed(_scene: Node):
 	if _target_node_path.is_empty():
 		return
-	_focus_node_in_scene_tree()
+	call_deferred("_focus_node_in_scene_tree")
 
 
 func _on_meta_clicked(meta: Variant):
