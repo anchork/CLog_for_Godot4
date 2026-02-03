@@ -115,6 +115,9 @@ func _refresh_label_connections():
 
 	var labels = EditorInterface.get_base_control().find_children("*", "RichTextLabel", true, false)
 	for label in labels:
+		if !label.has_signal("meta_clicked"):
+			continue
+
 		if !label.meta_clicked.is_connected(_on_meta_clicked):
 			label.meta_clicked.connect(_on_meta_clicked)
 			_connected_labels.append(label)
