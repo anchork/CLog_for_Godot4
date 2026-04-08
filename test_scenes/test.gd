@@ -1,5 +1,6 @@
-extends Node2D
+extends Control
 
+@onready var rich_text_label:RichTextLabel = $Panel/RichTextLabel
 var _count:int = 0
 func _ready() -> void:
 	_test_output()
@@ -8,6 +9,7 @@ func _ready() -> void:
 	_test_warn()
 	_test_v()
 	_test_timer()
+	_test_inline_rich_text_label()
 
 
 func _test_output() -> void:
@@ -69,3 +71,9 @@ func _test_timer() -> void:
 	await get_tree().create_timer(0.1).timeout
 	CLog.timer_end(timer9_id)
 	CLog.timer_cancel(timer9_id)
+
+func _test_inline_rich_text_label() -> void:
+	rich_text_label.append_text(CLog.o("normal text"))
+	rich_text_label.append_text(CLog.w("warning text"))
+	rich_text_label.append_text(CLog.e("error text"))
+	rich_text_label.append_text(CLog.v("verbose text"))

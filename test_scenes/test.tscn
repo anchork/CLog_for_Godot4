@@ -1,6 +1,28 @@
-[gd_scene load_steps=2 format=3 uid="uid://dt6frhagkvxnd"]
+[gd_scene format=3 uid="uid://dt6frhagkvxnd"]
 
 [ext_resource type="Script" uid="uid://bnmnsi6bbx1d3" path="res://test_scenes/test.gd" id="1_37kl0"]
 
-[node name="Test" type="Node2D"]
+[node name="Test" type="Control" unique_id=1863187562]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_37kl0")
+
+[node name="Panel" type="Panel" parent="." unique_id=1775003559]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel" unique_id=2093916633]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
