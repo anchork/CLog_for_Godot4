@@ -34,39 +34,49 @@ static var _scheduled_messages: Dictionary[String, int] = { }
 
 ## Error output. Shows an emphasized message in color with a "[ERROR]" prefix
 ## and calls push_error().
-static func e(...args) -> void:
+static func e(...args) -> String:
 	push_error(_get_raw_message(args))
 
+	args.append("\n" + "\n".join(_get_formatted_stack(4, ERROR_TAG)))
+	var output_message = _get_output_message(
+		CLogColors.ERROR_COLOR,
+		args,
+		ERROR_TAG,
+	)
+
 	if !OS.is_debug_build() && disable_output_on_release_mode:
-		return
+		return output_message
 
-	var message = _get_formatted_message(args)
-	var current_stack = get_stack()
-	var error_message = message + "\n"
-	error_message += "\n".join(_get_formatted_stack(4, ERROR_TAG))
-
-	_output(CLogColors.ERROR_COLOR, error_message.trim_suffix("\n"), ERROR_TAG)
+	return _output(output_message)
 
 
 ## Warning output. Shows an emphasized message in color with a "[WARNING]" prefix
 ## and calls push_warning().
-static func w(...args) -> void:
+static func w(...args) -> String:
 	push_warning(_get_raw_message(args))
+	var output_message = _get_output_message(
+		CLogColors.WARNING_COLOR,
+		args,
+		WARNING_TAG,
+	)
 	if !OS.is_debug_build() && disable_output_on_release_mode:
-		return
+		return output_message
 
-	var message = _get_formatted_message(args)
-	_output(CLogColors.WARNING_COLOR, message, WARNING_TAG)
+	return _output(output_message)
 
 
 ## Verbose output. Shows a message with a stack trace without an error.
-static func v(...args) -> void:
+static func v(...args) -> String:
+	args.append("\n" + "\n".join(_get_formatted_stack(4, VERBOSE_TAG)))
+	var output_message = _get_output_message(
+		CLogColors.TEXT_COLOR,
+		args,
+		VERBOSE_TAG,
+	)
 	if !OS.is_debug_build() && disable_output_on_release_mode:
-		return
+		return output_message
 
-	var message = _get_formatted_message(args) + "\n"
-	message += "\n".join(_get_formatted_stack(4, VERBOSE_TAG))
-	_output(CLogColors.TEXT_COLOR, message.trim_suffix("\n"), VERBOSE_TAG)
+	return _output(output_message.trim_suffix("\n"))
 
 
 ## Starts a timer and returns ID and outputs the timer name.
@@ -111,7 +121,8 @@ static func timer_start(timer_name: String) -> int:
 		"indent_level": indent_level,
 	}
 
-	_output(CLogColors.TEXT_COLOR, content)
+	var output_message = _get_output_message(CLogColors.TEXT_COLOR, [content])
+	_output(output_message)
 	return _timer_id
 
 
@@ -123,9 +134,6 @@ static func timer_start(timer_name: String) -> int:
 ## CLog.timer_end(timer1_id)
 ## [/codeblock]
 static func timer_end(id: int) -> void:
-	if !OS.is_debug_build() && disable_output_on_release_mode:
-		return
-
 	if _timers.has(id):
 		var start_time = float(_timers[id]["start_time"])
 		var end_time = float(Time.get_ticks_usec())
@@ -162,7 +170,8 @@ static func timer_end(id: int) -> void:
 				},
 			)
 		)
-		_output(CLogColors.TEXT_COLOR, content)
+		var output_message = _get_output_message(CLogColors.TEXT_COLOR, [content])
+		_output(output_message)
 		_timers.erase(id)
 	else:
 		e("Timer %s is not running or has already ended." % id)
@@ -204,16 +213,19 @@ static func timer_cancel(id: int) -> void:
 				},
 			)
 		)
-		_output(CLogColors.TEXT_COLOR, content)
+
+		var output_message = _get_output_message(CLogColors.TEXT_COLOR, [content])
+		_output(output_message)
 	else:
 		e("Timer %s is not running or has already ended." % id)
 
 
 ## Normal output.
-static func o(...args) -> void:
+static func o(...args) -> String:
+	var output_message = _get_output_message(CLogColors.TEXT_COLOR, args, INFO_TAG)
 	if !OS.is_debug_build() && disable_output_on_release_mode:
-		return
-	_output(CLogColors.TEXT_COLOR, _get_formatted_message(args), INFO_TAG)
+		return output_message
+	return _output(output_message)
 
 
 ## Outputs with the specified color.
@@ -221,11 +233,12 @@ static func o(...args) -> void:
 ## [codeblock]
 ## CLog.c(Color.MISTY_ROSE, "color print")
 ## [/codeblock]
-static func c(color: Color, ...args) -> void:
+static func c(color: Color, ...args) -> String:
+	var output_message = _get_output_message(color, args, INFO_TAG)
 	if !OS.is_debug_build() && disable_output_on_release_mode:
-		return
+		return output_message
 
-	_output(color, _get_formatted_message(args), INFO_TAG)
+	return _output(output_message)
 
 
 ## Outputs the message only once per key.
@@ -233,47 +246,25 @@ static func once(key: String, ...args) -> void:
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return
 
-	_output(CLogColors.TEXT_COLOR, _get_formatted_message(args), INFO_TAG, key)
+	_output(_get_output_message(CLogColors.TEXT_COLOR, args, INFO_TAG), key)
 
 
-static func _output(color: Color, message: String, tag: String = "", key: String = "") -> void:
-	var source_link = _get_source_link(_get_caller(3))
-
+static func _output(message: String, key: String = "") -> String:
 	if !key.is_empty():
 		if _once_keys.has(key):
-			return
+			return message
 
-	var use_alpha = Engine.is_embedded_in_editor()
-	var formatted_message = (
-		"".join(
-			[
-				"[color={line_color}]",
-				"[{source_link}]",
-				"[/color]",
-				"[color={color}]",
-				"{tag}{message}",
-				"[/color]",
-			],
-		).format(
-			{
-				"line_color": "#" + CLogColors.SOURCE_LINK_COLOR.to_html(use_alpha),
-				"source_link": source_link,
-				"color": "#" + color.to_html(use_alpha),
-				"tag": "" if tag.is_empty() else " [b][" + tag + "][/b]",
-				"message": " " + message,
-			},
-		)
-	)
-
-	if _last_output == formatted_message:
-		_schedule_flush(formatted_message)
+	if _last_output == message:
+		_schedule_flush(message)
 	else:
 		_flush(_last_output)
-		print_rich(formatted_message)
-		_last_output = formatted_message
+		print_rich(message)
+		_last_output = message
 
 	if !key.is_empty():
 		_once_keys[key] = 0
+
+	return message
 
 
 static func _schedule_flush(message: String) -> void:
@@ -311,6 +302,32 @@ static func _flush(message: String) -> void:
 
 	_scheduled_messages.erase(message)
 	_last_output = ""
+
+
+static func _get_output_message(color: Color, args: Array, tag: String = "") -> String:
+	var formatted_message = _get_formatted_message(args)
+	var source_link = _get_source_link(_get_caller(3))
+	var use_alpha = Engine.is_embedded_in_editor()
+	return (
+		"".join(
+			[
+				"[color={line_color}]",
+				"[{source_link}]",
+				"[/color]",
+				"[color={color}]",
+				"{tag}{message}",
+				"[/color]",
+			],
+		).format(
+			{
+				"line_color": "#" + CLogColors.SOURCE_LINK_COLOR.to_html(use_alpha),
+				"source_link": source_link,
+				"color": "#" + color.to_html(use_alpha),
+				"tag": "" if tag.is_empty() else " [b][" + tag + "][/b]",
+				"message": " " + formatted_message,
+			},
+		)
+	)
 
 
 static func _get_source_link(stacktrace_line: Dictionary) -> String:
