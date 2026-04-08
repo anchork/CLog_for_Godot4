@@ -45,7 +45,7 @@ static func e(...args) -> String:
 	)
 
 	if !OS.is_debug_build() && disable_output_on_release_mode:
-		return output_message
+		return output_message + "\n"
 
 	return _output(output_message)
 
@@ -60,7 +60,7 @@ static func w(...args) -> String:
 		WARNING_TAG,
 	)
 	if !OS.is_debug_build() && disable_output_on_release_mode:
-		return output_message
+		return output_message + "\n"
 
 	return _output(output_message)
 
@@ -74,7 +74,7 @@ static func v(...args) -> String:
 		VERBOSE_TAG,
 	)
 	if !OS.is_debug_build() && disable_output_on_release_mode:
-		return output_message
+		return output_message + "\n"
 
 	return _output(output_message.trim_suffix("\n"))
 
@@ -224,7 +224,7 @@ static func timer_cancel(id: int) -> void:
 static func o(...args) -> String:
 	var output_message = _get_output_message(CLogColors.TEXT_COLOR, args, INFO_TAG)
 	if !OS.is_debug_build() && disable_output_on_release_mode:
-		return output_message
+		return output_message + "\n"
 	return _output(output_message)
 
 
@@ -236,7 +236,7 @@ static func o(...args) -> String:
 static func c(color: Color, ...args) -> String:
 	var output_message = _get_output_message(color, args, INFO_TAG)
 	if !OS.is_debug_build() && disable_output_on_release_mode:
-		return output_message
+		return output_message + "\n"
 
 	return _output(output_message)
 
@@ -264,7 +264,7 @@ static func _output(message: String, key: String = "") -> String:
 	if !key.is_empty():
 		_once_keys[key] = 0
 
-	return message
+	return message + "\n"
 
 
 static func _schedule_flush(message: String) -> void:
