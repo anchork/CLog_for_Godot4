@@ -491,3 +491,6 @@ static func _get_root_child(node: Node) -> Node:
 static func is_godot_4_6_or_higher():
 	var version = Engine.get_version_info()
 	return version.major > 4 || (version.major == 4 && version.minor >= 6)
+
+static func bbcode_escape(text: String) -> String:
+	return text.replace("[", "[lb]")
