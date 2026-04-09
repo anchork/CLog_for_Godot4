@@ -76,6 +76,23 @@ func _process(_delta: float):
 ```
 
 
+### Stack Offset
+Specifies the caller offset used in the stack trace.
+
+This is useful for wrapper functions or similar cases where you want the stack trace to show the original caller instead of the wrapper itself.
+```gdscript
+extends Node
+
+func _ready() -> void:
+	wrapper("ready!")
+
+func wrapper(message:String) -> void:
+	CLog.o_stack_offset(1, message) # output: [./main.gd:4 @_ready()] [INFO] ready!
+```
+
+
+
+
 ### Performance Timers
 Measure how long a specific process takes.
 ```gdscript
