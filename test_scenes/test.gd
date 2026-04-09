@@ -10,6 +10,7 @@ func _ready() -> void:
 	_test_v()
 	_test_timer()
 	_test_inline_rich_text_label()
+	_test_o_stack_offset()
 
 
 func _test_output() -> void:
@@ -77,3 +78,15 @@ func _test_inline_rich_text_label() -> void:
 	rich_text_label.append_text(CLog.w("warning text"))
 	rich_text_label.append_text(CLog.e("error text"))
 	rich_text_label.append_text(CLog.v("verbose text"))
+
+func _test_o_stack_offset() -> void:
+	var wrapper1:Callable = (
+		func(message:String) -> void:
+			CLog.o_stack_offset(1, message)
+	)
+
+	wrapper1.call("output: @_text_o_stack_offset")
+
+	CLog.o_stack_offset(-1, "output: @o_stack_offset()")
+
+	CLog.o_stack_offset(100, "output: UNKNOWN CALLER")
