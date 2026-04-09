@@ -248,6 +248,25 @@ static func once(key: String, ...args) -> void:
 
 	_output(_get_output_message(CLogColors.TEXT_COLOR, args, INFO_TAG), key)
 
+## Normal output with specified caller offset in stack.
+## [br]
+## [codeblock]
+## extends Node
+##
+## func _ready() -> void:
+## 	wrapper("ready!")
+##
+## func wrapper(message:String) -> void:
+## 	CLog.o_stack_offset(1, message) # output: [./main.gd:4 @_ready()] [INFO] ready!
+## [/codeblock]
+static func o_stack_offset(offset:int, ...args) -> String:
+	var output_message = _get_output_message(CLogColors.TEXT_COLOR, args, INFO_TAG, offset)
+	if !OS.is_debug_build() && disable_output_on_release_mode:
+		return output_message + "\n"
+	return _output(output_message)
+
+
+
 
 static func _output(message: String, key: String = "") -> String:
 	if !key.is_empty():
@@ -304,9 +323,9 @@ static func _flush(message: String) -> void:
 	_last_output = ""
 
 
-static func _get_output_message(color: Color, args: Array, tag: String = "") -> String:
+static func _get_output_message(color: Color, args: Array, tag: String = "",  caller_offset:int = 0) -> String:
 	var formatted_message = _get_formatted_message(args)
-	var source_link = _get_source_link(_get_caller(3))
+	var source_link = _get_source_link(_get_caller(3 + caller_offset))
 	var use_alpha = Engine.is_embedded_in_editor()
 	return (
 		"".join(
