@@ -96,6 +96,7 @@ func _generate_colors_class_file():
 	file.flush()
 	file.close()
 	print("(re)generated clog_colors.gd")
+	for i in 5: await get_tree().process_frame
 	EditorInterface.get_resource_filesystem().scan()
 
 
