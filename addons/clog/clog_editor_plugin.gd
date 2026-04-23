@@ -96,7 +96,6 @@ func _generate_colors_class_file():
 	file.flush()
 	file.close()
 	print("(re)generated clog_colors.gd")
-	EditorInterface.get_resource_filesystem().scan()
 
 
 func _setup_timer():
