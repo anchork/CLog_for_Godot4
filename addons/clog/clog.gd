@@ -257,10 +257,10 @@ static func once(key: String, ...args) -> void:
 ## 	wrapper("ready!")
 ##
 ## func wrapper(message:String) -> void:
-## 	CLog.o_stack_offset(1, message) # output: [./main.gd:4 @_ready()] [INFO] ready!
+## 	CLog.o_stack_offset(1, message) # output: [./main.gd:4 @_ready()] ready!
 ## [/codeblock]
 static func o_stack_offset(offset:int, ...args) -> String:
-	var output_message = _get_output_message(CLogColors.TEXT_COLOR, args, INFO_TAG, offset)
+	var output_message = _get_output_message(CLogColors.TEXT_COLOR, args, "", offset)
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return output_message + "\n"
 	return _output(output_message)
