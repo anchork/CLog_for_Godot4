@@ -338,30 +338,28 @@ static func _flush(message: String) -> void:
 	_last_output = ""
 
 
-static func _get_output_message(color: Color, args: Array, tag: String = "",  caller_offset:int = 0) -> String:
+static func _get_output_message(color: Color, args: Array, tag: String = "", caller_offset: int = 0) -> String:
 	var formatted_message = _get_formatted_message(args)
-	var source_link = _get_source_link(_get_caller(3 + caller_offset))
 	var use_alpha = Engine.is_embedded_in_editor()
-	return (
-		"".join(
-			[
-				"[color={line_color}]",
-				"[{source_link}]",
-				"[/color]",
-				"[color={color}]",
-				"{tag}{message}",
-				"[/color]",
-			],
-		).format(
-			{
-				"line_color": "#" + CLogColors.SOURCE_LINK_COLOR.to_html(use_alpha),
-				"source_link": source_link,
-				"color": "#" + color.to_html(use_alpha),
-				"tag": "" if tag.is_empty() else " [b][" + tag + "][/b]",
-				"message": " " + formatted_message,
-			},
-		)
-	)
+
+	var prefix = ""
+	if OS.is_debug_build():
+		var source_link = _get_source_link(_get_caller(3 + caller_offset))
+		var line_color = "#" + CLogColors.SOURCE_LINK_COLOR.to_html(use_alpha)
+		prefix = "[color=%s][%s][/color]" % [line_color, source_link]
+
+	return "".join([
+		"{prefix}",
+		"[color={color}]",
+		"{tag}{message}",
+		"[/color]"
+	]).format({
+		"prefix": prefix, # expected empty in release mode.
+		"color": "#" + color.to_html(use_alpha),
+		"tag": "" if tag.is_empty() else " [b][%s][/b]" % tag,
+		"message": " " + formatted_message,
+	})
+
 
 
 static func _get_source_link(stacktrace_line: Dictionary) -> String:
