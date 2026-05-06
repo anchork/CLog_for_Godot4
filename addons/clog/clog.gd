@@ -174,7 +174,8 @@ static func timer_end(id: int) -> void:
 		_output(output_message)
 		_timers.erase(id)
 	else:
-		e("Timer %s is not running or has already ended." % id)
+		if OS.is_debug_build():
+			e("Timer %s is not running or has already ended." % id)
 
 
 ## Cancels the timer with the ID and outputs the timer name.
@@ -217,7 +218,8 @@ static func timer_cancel(id: int) -> void:
 		var output_message = _get_output_message(CLogColors.TEXT_COLOR, [content])
 		_output(output_message)
 	else:
-		e("Timer %s is not running or has already ended." % id)
+		if OS.is_debug_build():
+			e("Timer %s is not running or has already ended." % id)
 
 
 ## Normal output.
