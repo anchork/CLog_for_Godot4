@@ -83,11 +83,11 @@ func _generate_colors_class_file():
 			],
 		).format(
 			{
-				"source_link_color": source_link_color,
-				"text_color": text_color,
-				"dimmed_color": comment_color,
-				"error_color": error_color,
-				"warning_color": warning_color,
+				"source_link_color": _normalize_color(source_link_color),
+				"text_color": _normalize_color(text_color),
+				"dimmed_color": _normalize_color(comment_color),
+				"error_color": _normalize_color(error_color),
+				"warning_color": _normalize_color(warning_color),
 			},
 		)
 	)
@@ -202,3 +202,10 @@ func _open_script_at_line(path: String, line: int):
 	if script is Script:
 		EditorInterface.edit_resource(script)
 		EditorInterface.get_script_editor().goto_line(line - 1)
+
+## Normalize color values that exceed 1.0 in a Godot 4.6 theme.
+func _normalize_color(color: Color):
+	var max_val = max(color.r, max(color.g, color.b))
+	if max_val > 1.0:
+		return Color(color.r / max_val, color.g / max_val, color.b / max_val, color.a)
+	return color
