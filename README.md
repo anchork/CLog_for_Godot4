@@ -77,6 +77,11 @@ func _process(_delta: float):
 
 
 ### Stack Offset
+- CLog.o_stack_offset()
+- CLog.o_stack_offset_arr()
+- CLog.c_stack_offset()
+- CLog.c_stack_offset_arr()
+
 Specifies the caller offset used in the stack trace.
 
 This is useful for wrapper functions or similar cases where you want the stack trace to show the original caller instead of the wrapper itself.
@@ -88,6 +93,28 @@ func _ready() -> void:
 
 func wrapper(message:String) -> void:
 	CLog.o_stack_offset(1, message) # output: [./main.gd:4 @_ready()] [INFO] ready!
+```
+
+This makes your wrapper class easier to manage complex color and tag configurations.
+``` gdscript
+class_name MyCLog 
+
+static func player(...args) -> void:
+	args.push_front("[PLAYER]")
+	CLog.c_stack_offset_arr(1, Color.CYAN, args)
+
+
+static func enemy(...args) -> void:
+	args.push_front("[ENEMY]")
+	CLog.c_stack_offset_arr(1, Color.ORANGE_RED, args)
+
+static func inventory(...args) -> void:
+	args.push_front("[INVENTORY]")
+	CLog.c_stack_offset_arr(1, Color.GOLD, args)
+	
+static func saveload(...args) -> void:
+	args.push_front("[SAVE/LOAD]")
+	CLog.c_stack_offset_arr(1, Color.MEDIUM_SPRING_GREEN, args)
 ```
 
 
