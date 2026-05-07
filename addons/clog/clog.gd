@@ -262,10 +262,15 @@ static func once(key: String, ...args) -> void:
 ## 	CLog.o_stack_offset(1, message) # output: [./main.gd:4 @_ready()] ready!
 ## [/codeblock]
 static func o_stack_offset(offset:int, ...args) -> String:
-	var output_message = _get_output_message(CLogColors.TEXT_COLOR, args, "", offset)
+	return o_stack_offset_arr(offset + 1, args)
+
+
+static func o_stack_offset_arr(offset:int, arr:Array) -> String:
+	var output_message = _get_output_message(CLogColors.TEXT_COLOR, arr, "", offset)
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return output_message + "\n"
 	return _output(output_message)
+
 
 ## Colored output with specified caller offset in stack.
 ## [br]
@@ -279,7 +284,11 @@ static func o_stack_offset(offset:int, ...args) -> String:
 ## 	CLog.c_stack_offset(1, message) # output: [./main.gd:4 @_ready()] ready!
 ## [/codeblock]
 static func c_stack_offset(offset:int, color:Color, ...args) -> String:
-	var output_message = _get_output_message(color, args, "", offset)
+	return c_stack_offset_arr(offset + 1, color, args)
+
+
+static func c_stack_offset_arr(offset:int, color:Color, arr:Array) -> String:
+	var output_message = _get_output_message(color, arr, "", offset)
 	if !OS.is_debug_build() && disable_output_on_release_mode:
 		return output_message + "\n"
 	return _output(output_message)

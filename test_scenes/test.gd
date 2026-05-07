@@ -11,6 +11,9 @@ func _ready() -> void:
 	_test_timer()
 	_test_inline_rich_text_label()
 	_test_o_stack_offset()
+	_test_c_stack_offset()
+	_test_o_stack_offset_arr()
+	_test_c_stack_offset_arr()
 
 
 func _test_output() -> void:
@@ -82,11 +85,48 @@ func _test_inline_rich_text_label() -> void:
 func _test_o_stack_offset() -> void:
 	var wrapper1:Callable = (
 		func(message:String) -> void:
-			CLog.o_stack_offset(1, message)
+			CLog.o_stack_offset(1, [message])
 	)
 
 	wrapper1.call("output: @_text_o_stack_offset")
 
-	CLog.o_stack_offset(-1, "output: @o_stack_offset()")
+	CLog.o_stack_offset(-1, ["output: @o_stack_offset()"])
 
-	CLog.o_stack_offset(100, "output: UNKNOWN CALLER")
+	CLog.o_stack_offset(100, ["output: UNKNOWN CALLER"])
+	
+func _test_o_stack_offset_arr() -> void:
+	var wrapper1:Callable = (
+		func(message:String) -> void:
+			CLog.o_stack_offset_arr(1, [message])
+	)
+
+	wrapper1.call("output: @_text_o_stack_offset_arr")
+
+	CLog.o_stack_offset_arr(-1, ["output: @o_stack_offset_arr()"])
+	CLog.o_stack_offset_arr(100, ["output: UNKNOWN CALLER"])
+	
+	
+func _test_c_stack_offset() -> void:
+	var wrapper1:Callable = (
+		func(message:String) -> void:
+			CLog.c_stack_offset(1, Color.CYAN, [message])
+	)
+
+	wrapper1.call("output: @_text_c_stack_offset")
+
+	CLog.c_stack_offset(-1, Color.CYAN, ["output: @c_stack_offset()"])
+
+	CLog.c_stack_offset(100, Color.CYAN, ["output: UNKNOWN CALLER"])
+	
+func _test_c_stack_offset_arr() -> void:
+	var wrapper1:Callable = (
+		func(message:String) -> void:
+			CLog.c_stack_offset_arr(1, Color.CYAN, [message])
+	)
+
+	wrapper1.call("output: @_text_c_stack_offset_arr")
+
+	CLog.c_stack_offset_arr(-1, Color.CYAN, ["output: @c_stack_offset_arr()"])
+
+	CLog.c_stack_offset_arr(100, Color.CYAN, ["output: UNKNOWN CALLER"])
+	

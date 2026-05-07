@@ -21,11 +21,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-TestAutoLoad="*res://test_scenes/test_auto_load.gd"
-
-[debug]
-
-gdscript/warnings/untyped_declaration=2
+TestAutoLoad="*uid://cecks8cjr2sxk"
 
 [editor_plugins]
 
